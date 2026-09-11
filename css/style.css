@@ -1,0 +1,1734 @@
+/* =========================================================
+   delarge — portfolio
+   Traduzido do Figma "Portfolio" (node 1:4, frame 1440x7048)
+   ========================================================= */
+
+:root{
+  /* cor */
+  --dark:        #222222;
+  --white:       #ffffff;
+  --ink:         #111111;
+  --black:       #000000;
+  --tag:         #1e1e1e;
+  --card-bg:     rgba(143,143,143,.38);
+  --veil:        rgba(255,255,255,.2);
+
+  /* tipografia */
+  --font-sans:    "Zalando Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Geist", var(--font-sans);
+
+  /* O frame de 1440 do Figma vira so referencia de proporcao. O conteudo
+     nao tem mais teto de largura: ocupa a tela inteira, com a margem
+     pequena, em qualquer tamanho. */
+  --frame:       1440px;
+  --gutter:      16px;
+  --gutter-cards: 10px;   /* projetos vao mais perto da borda */
+  --vw:          100vw;   /* sobrescrito no JS sem a largura da barra de rolagem */
+  --nav-h:       70px;    /* altura real da navbar, medida no JS */
+  --nav-viagem:  calc(50svh - var(--nav-h) / 2);  /* do centro da intro ao topo */
+  --shell-offset: 0px;   /* sem teto, o conteudo nunca fica centralizado */
+
+  /* ritmo vertical */
+  --space-block: clamp(56px, 8.3vw, 170px);
+  --space-rule:  clamp(44px, 5vw, 92px);    /* respiro antes do filete de secao */
+  --ease:        cubic-bezier(.16,1,.3,1);
+  --ease-spread: cubic-bezier(.215,.61,.355,1);   /* curva medida na referencia */
+}
+
+*,
+*::before,
+*::after{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--white);
+  color: var(--black);
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img{ display: block; max-width: 100%; }
+
+ul{ margin: 0; padding: 0; list-style: none; }
+
+a{ color: inherit; text-decoration: none; }
+
+:focus-visible{
+  outline: 1.5px solid currentColor;
+  outline-offset: 4px;
+}
+
+.shell{
+  width: 100%;
+  padding-inline: var(--gutter);
+}
+
+/* ---------------------------------------------------------
+   INTRO E NAVBAR
+   Uma navbar so. Ela nasce no centro do bloco escuro, sobe junto
+   com a pagina ate encostar no topo, prende ali e, quando o bloco
+   escuro passa, so troca de cor. Nao existe segunda navbar.
+   --------------------------------------------------------- */
+
+/* Fundo da intro. Fica FIXO, como na raggededge: ele nao rola junto, e o
+   conteudo branco desliza por cima dele. E dai que vem a transicao suave,
+   sem nenhum degrade de emenda. Verificado la: o canvas do gradiente e
+   position fixed e so e desligado depois de coberto.
+
+   A cor solida continua sendo o fundo: se o WebGL nao subir, o canvas se
+   remove e a intro fica como era. */
+.backdrop{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100svh;
+  z-index: 0;
+  background: var(--dark);
+  overflow: clip;
+}
+
+/* coberto pelo conteudo: sai de cena e o shader para de desenhar, porque o
+   IntersectionObserver dele deixa de ver o canvas */
+.backdrop.esta-coberto{ display: none; }
+
+/* a folha branca precisa ser opaca para cobrir o fundo fixo */
+.page{
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+}
+
+/* gradiente animado em WebGL (shader do 21st.dev) */
+.backdrop__shader{
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* metades vazias acima e abaixo da navbar: as duas mais a altura dela
+   somam exatamente os 100svh do bloco escuro */
+.intro-espaco{ height: var(--nav-viagem); }
+
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  width: 100%;
+  padding-inline: var(--gutter);
+  padding-block: 23px;
+
+  display: flex;
+  align-items: center;
+  font-size: clamp(15px, 1.39vw, 26px);
+  font-weight: 500;
+  line-height: 1.2;
+
+  /* Sem fundo. A cor sai de mix-blend-mode: difference sobre branco puro,
+     entao o texto se inverte pixel a pixel contra o que estiver embaixo:
+     preto sobre a secao branca, claro sobre o bloco escuro, e negativo ao
+     cruzar as capas dos projetos. Nao existe estado, e nao existe faixa.
+
+     O blend precisa ficar aqui, no <nav>, e nao nos filhos: position sticky
+     cria contexto de empilhamento, e blend em filho mescla so dentro desse
+     grupo, contra nada. Foi o que quebrou a inversao quando tentei mover.
+     Por isso o painel do menu mora fora desta tag.
+
+     A inversao vale em toda a pagina, inclusive sobre o gradiente. Medi la
+     um contraste de 1.67:1 no ponto claro do shader, abaixo do minimo de
+     4.5:1, mas foi decisao sua manter. */
+  color: var(--white);
+  mix-blend-mode: difference;
+
+  /* centro real da tela menos a posicao natural da marca */
+  --estrela-x: calc(var(--vw) / 2 - 21px - var(--gutter));
+}
+
+/* A faixa da navbar. Sai de cena inteira quando nao ha scroll timeline: sem
+   ela o canvas nao acompanharia a viagem da intro e a fatia sairia torta. */
+.navbar__fundo{
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: clip;
+  background: var(--dark);
+}
+
+.navbar__shader{
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100svh;
+  transition: opacity .4s var(--ease);
+}
+
+/* o painel do menu e chapado: a faixa da barra vira chapada tambem, senao
+   fica uma tarja de gradiente no topo dele */
+.painel-aberto .navbar__shader{ opacity: 0; }
+
+/* Presa de verdade, e nao apenas encostada. Com sticky a barra depende do
+   bloco em que vive: basta um ancestral com overflow para ela largar o topo,
+   e no mobile isso acontece com o painel do menu aberto travando o scroll.
+
+   Em fixed ela sai do fluxo, entao a viagem da intro nao pode mais ser o
+   proprio scroll carregando a barra: ela vira uma animacao ligada ao scroll.
+   Mesmo movimento, mesma distancia, mas fora da main thread, entao nao ha
+   atraso de um frame como haveria escrevendo o transform num listener.
+
+   Atras de @supports porque o Firefox ainda nao tem scroll timeline. La a
+   barra segue sticky, que depois de encostar no topo e indistinguivel.
+   Movimento reduzido tambem fica no sticky: e o unico jeito de nao trocar
+   uma viagem que o scroll comanda por uma animacao declarada. */
+@supports (animation-timeline: scroll()){
+  @media (prefers-reduced-motion: no-preference){
+    /* sem a barra no fluxo, os dois vazios sozinhos valem os 100svh */
+    .intro-espaco{ height: 50svh; }
+
+    .navbar:not(.navbar--fixa){
+      position: fixed;
+      left: 0;
+      animation: nav-sobe linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 var(--nav-viagem);
+
+      /* com faixa propria o texto nao precisa mais se inverter contra o que
+         passa embaixo: ele fica claro sobre o gradiente, sempre */
+      mix-blend-mode: normal;
+    }
+
+    .navbar__fundo{ display: block; }
+
+    /* O canvas e colado no topo da viewport, e nao na barra: enquanto a barra
+       desce os 100svh da intro, ele sobe a mesma distancia. O que se ve pela
+       janela e sempre a fatia certa do campo, e durante a intro a faixa e
+       indistinguivel do fundo atras dela. */
+    .navbar__shader{
+      animation: nav-fundo linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 var(--nav-viagem);
+    }
+  }
+}
+
+@keyframes nav-sobe{
+  from{ translate: 0 var(--nav-viagem); }
+  to{   translate: 0 0; }
+}
+
+@keyframes nav-fundo{
+  from{ translate: 0 calc(-1 * var(--nav-viagem)); }
+  to{   translate: 0 0; }
+}
+
+
+.brand{
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+/* A estrela e irma do link, e nao filha: so assim ela pode ocupar a coluna
+   do meio no mobile e cair no centro exato da tela. */
+.brand__slot{
+  display: inline-flex;
+  flex: none;
+  margin-right: 6px;
+  transform-origin: left center;
+}
+
+/* A estrela e uma mascara pintada com currentColor, e nao uma tag de
+   imagem, para acompanhar sozinha a troca de cor da navbar. A forma
+   continua vindo do SVG exportado do Figma. */
+.brand__star{
+  display: block;
+  width: 20px;
+  height: 21px;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: url(../assets/svg/star-2.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-2.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+@keyframes star-spin{
+  to{ transform: rotate(360deg); }
+}
+
+/* Revelacao letra a letra, traduzida do Blur Reveal de @tom_ui.
+   Sai a mascara com overflow que havia antes: o desfoque vaza para fora
+   do glifo e seria cortado por ela.
+
+   Numeros do componente: blur 12px, y 10px, duracao 0.3/0.5 = 0.6s,
+   escalonamento 0.03/1.5 = 0.02s por letra. */
+.mask{ display: inline-block; }
+.mask > span{ display: inline-block; }
+
+.palavra{ display: inline-block; white-space: nowrap; }
+
+.letra{ display: inline-block; }
+
+/* o texto inteiro continua no DOM para leitor de tela */
+.so-leitor{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.navbar__links{
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-left: clamp(40px, 12.78vw, 184px);
+  margin-right: auto;
+}
+
+/* Os dois em bloco de proposito. O <a> nascia inline, e caixa inline tem a
+   altura natural da fonte, nao a da entrelinha: ela sobrava 0,66px para baixo
+   em relacao ao bloco do <button>, e como o filete de hover e ::after em
+   bottom: 0, os dois filetes paravam em alturas diferentes na mesma barra.
+   Mesmo modelo de caixa dos dois lados, mesmo filete. */
+.navbar__links a,
+.navbar__contact{
+  position: relative;
+  display: block;
+  padding-bottom: 2px;
+}
+
+/* Contato e um <button> agora, porque abre um painel em vez de navegar, mas
+   tem de renderizar exatamente como os links ao lado.
+
+   Nao basta zerar borda e fundo. Tres coisas que a folha do navegador deixa
+   diferente e que apareciam na barra:
+   - padding: 1px 6px no botao. O 1px de cima empurrava o texto meio pixel e
+     fazia o filete de hover, que e ::after em bottom: 0, nascer 1px acima do
+     filete dos vizinhos.
+   - appearance: auto, que mantem o controle nativo por baixo.
+   - text-rendering volta para auto em controle de formulario, enquanto o body
+     roda em optimizeLegibility. Era kerning diferente do resto da barra, na
+     unica palavra da direita.
+   O restante vem de font: inherit, que traz familia, corpo, peso e entrelinha. */
+.navbar__contact{
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0 0 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-rendering: inherit;
+  cursor: pointer;
+}
+
+.navbar__links a::after,
+.navbar__contact::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .45s var(--ease);
+}
+
+.navbar__links a:hover::after,
+.navbar__contact:hover::after{
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.navbar__tagline{
+  margin: 0 clamp(32px, 10.2vw, 147px) 0 0;
+}
+
+/* botao de menu, so no mobile */
+/* So no mobile. No desktop os links vivem na propria barra, e um hamburguer
+   ao lado deles abriria um painel repetindo o que ja esta ali. */
+.nav-toggle{
+  display: none;
+  position: relative;
+  width: 26px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.nav-toggle > span{
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform .35s var(--ease);
+}
+
+.nav-toggle > span:nth-child(1){ top: 3px; }
+.nav-toggle > span:nth-child(2){ bottom: 3px; }
+
+/* as duas barras viram X */
+/* o estado do menu vive no <html>, porque o painel esta fora do <nav> */
+.menu-aberto .nav-toggle > span:nth-child(1){ transform: translateY(4.75px) rotate(45deg); }
+.menu-aberto .nav-toggle > span:nth-child(2){ transform: translateY(-4.75px) rotate(-45deg); }
+
+/* com o painel aberto a navbar para de inverter: o fundo dele e chapado */
+.painel-aberto .navbar{ mix-blend-mode: normal; color: var(--white); }
+
+/* ---- intro, em tres tempos ----
+   1. estado inicial : tudo escondido dentro da mascara (Figma 1:5)
+   2. .is-revealed   : marca, estrela e assinatura aparecem perto do centro
+   3. .is-assembled  : a linha se abre e o resto da nav entra (Figma 1:9) */
+
+.js .navbar .letra{
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(10px);
+  transition:
+    opacity   .6s var(--ease),
+    filter    .6s var(--ease),
+    transform .6s var(--ease);
+  transition-delay: calc(var(--atraso, 0s) + var(--i) * .02s);
+}
+
+.navbar.is-revealed .brand__name .letra,
+.navbar.is-revealed .navbar__tagline .letra{
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+.navbar.is-revealed .navbar__tagline{ --atraso: .35s; }
+
+.js .navbar .brand__slot{ opacity: 0; }
+
+.navbar.is-revealed .brand__slot{
+  opacity: 1;
+  transition: opacity .9s var(--ease) .22s;
+}
+
+/* A estrela nao atravessa o texto: ela some no centro e reaparece ja no
+   lugar, colada na marca. */
+@keyframes estrela-troca{
+  0%   { opacity: 1; transform: translateX(var(--estrela-x)) scale(2.1); }
+  38%  { opacity: 0; transform: translateX(var(--estrela-x)) scale(2.1); }
+  39%  { opacity: 0; transform: none; }
+  100% { opacity: 1; transform: none; }
+}
+
+.js .navbar:not(.is-assembled) .brand__slot{
+  transform: translateX(var(--estrela-x)) scale(2.1);
+}
+
+.navbar.is-assembled .brand__slot{
+  animation: estrela-troca .95s var(--ease) forwards;
+}
+
+.js .navbar:not(.is-assembled) .brand__name{
+  transform: translateX(clamp(80px, 15.83vw, 228px));
+}
+
+.navbar .brand__name{
+  transition: transform 1.15s var(--ease-spread);
+}
+
+/* links e contato so entram quando a linha ja abriu */
+.navbar.is-assembled .navbar__links .letra,
+.navbar.is-assembled .navbar__contact .letra{
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+
+.navbar.is-assembled .navbar__links li:nth-child(1){ --atraso: .95s; }
+.navbar.is-assembled .navbar__links li:nth-child(2){ --atraso: 1.03s; }
+.navbar.is-assembled .navbar__links li:nth-child(3){ --atraso: 1.11s; }
+.navbar.is-assembled .navbar__contact{ --atraso: 1.19s; }
+
+/* ---------------------------------------------------------
+   DESFOQUE PROGRESSIVO NA BORDA DE BAIXO
+   Traduzido do componente ProgressiveBlur. A camada e fixa,
+   aplica backdrop-filter e usa uma mascara para o desfoque
+   perder forca em direcao ao centro da tela.
+
+   O componente original tambem pinta um degrade ate a cor de
+   fundo, o que assume uma cor unica. Esta pagina tem duas, o
+   bloco escuro e a secao branca, entao o degrade ficaria como
+   uma neblina clara sobre o escuro. Ficou so o desfoque, que
+   funciona sobre as duas e ainda ajuda a navbar: sem fundo
+   proprio, ela agora le sobre conteudo amaciado.
+   --------------------------------------------------------- */
+
+.blur-borda{
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 110px;
+  z-index: 15;            /* abaixo da navbar, acima do conteudo */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+/* No mobile a faixa de 110px cobria os links de contato do rodape, que sao a
+   ultima coisa da pagina e ficam justamente nessa altura. Na tela pequena o
+   desfoque custa mais do que entrega. */
+@media (max-width: 860px){
+  .blur-borda--base{ display: none; }
+}
+
+.blur-borda--base{
+  bottom: 0;
+  -webkit-mask-image: linear-gradient(to top, #000 50%, transparent);
+  mask-image: linear-gradient(to top, #000 50%, transparent);
+}
+
+/* ---------------------------------------------------------
+   MANIFESTO
+   --------------------------------------------------------- */
+
+.manifesto{
+  padding-top: var(--space-block);
+}
+
+/* a navbar fica presa no topo, entao os alvos de ancora precisam de folga */
+#sobre,
+#projetos,
+#servicos,
+#contato{ scroll-margin-top: calc(var(--nav-h) + 16px); }
+
+.manifesto__text{
+  margin: 0;
+  font-size: clamp(26px, 3.33vw, 68px);
+  font-weight: 500;
+  line-height: 1.209;          /* 58/48 */
+  letter-spacing: -.0625em;    /* -3/48 */
+  color: var(--black);
+}
+
+.manifesto__text strong{ font-weight: 600; }
+
+/* ---- leitura conforme o scroll ----
+   Traduzido do Text Scroll Read de @youcefbnm, com outro mecanismo. O
+   componente usa um degrade com background-clip: text, e um degrade e uma
+   faixa vertical unica: ele varre as tres linhas ao mesmo tempo e o corte
+   sai atravessando o bloco. Aqui cada letra tem seu indice e o JS escreve
+   so --lidas, uma vez por quadro. A conta abaixo faz o resto.
+
+   A rampa dividida por 3 deixa a borda com tres letras de largura, em vez
+   de acender uma de cada vez de forma dura. Os extremos sao os do
+   componente: 5% de preto no que ainda nao foi lido, preto cheio no lido. */
+.js .leitura .letra-lida,
+.js .leitura .manifesto__star{
+  opacity: clamp(.05, calc((var(--lidas, 0) - var(--i)) / 3), 1);
+}
+
+/* Prende a estrela na ultima palavra da frase. Sem isso, em telas estreitas
+   ela cai sozinha no comeco da linha e a margem negativa a joga para fora
+   da coluna. */
+.manifesto__keep{ white-space: nowrap; }
+
+/* A estrela fica entre duas frases e ha um espaco real no HTML de cada lado,
+   para o texto nao sair grudado ao ser copiado ou lido por leitor de tela.
+   A margem e igual nos dois lados: como os dois espacos do HTML tambem sao
+   iguais, o vao final fica simetrico. A margem negativa de antes puxava a
+   estrela para a esquerda e encostava ela em "independente." */
+.manifesto__star{
+  display: inline-block;
+  width: 1.146em;              /* 55/48 */
+  height: 1.146em;
+  margin-inline: .14em;
+  vertical-align: -.26em;
+  /* cor explicita: o clip do texto deixa o pai transparente, e currentColor
+     levaria a estrela junto */
+  background-color: var(--black);
+  -webkit-mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+/* ---------------------------------------------------------
+   DIVISOR DE SECAO
+   --------------------------------------------------------- */
+
+/* Titulo de secao: o rotulo abre a linha, a esquerda, e o filete corre
+   ate a borda. O filete entra deslizando da esquerda para a direita quando
+   a secao aparece. */
+.rule{
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: var(--space-rule);
+}
+
+.rule__label{
+  flex: none;
+  font-size: clamp(15px, 1.25vw, 20px);
+  font-weight: 500;
+  letter-spacing: -.01em;
+  color: var(--black);
+}
+
+.rule__line{
+  flex: 1 1 auto;
+  min-width: 0;      /* o atributo width=1331 do SVG nao pode travar o encolhimento */
+  width: auto;
+  height: 1px;
+}
+
+.js .rule__line{
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.1s var(--ease-spread);
+}
+
+.rule.is-visible .rule__line{ transform: scaleX(1); }
+
+/* ---------------------------------------------------------
+   PROJETOS
+   Mesma gramatica de servicos e processo: filete no topo,
+   coluna de 64px com o numero, titulo grande e uma coluna
+   secundaria. Aqui a coluna secundaria e a capa, e ela pesa
+   mais que nas outras secoes por ser o conteudo principal.
+   --------------------------------------------------------- */
+
+.projects{
+  padding-top: clamp(28px, 3.5vw, 56px);
+  padding-bottom: clamp(28px, 3.4vw, 56px);
+}
+
+.project{ display: block; }
+
+.project__link{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.3fr);
+  gap: clamp(12px, 2vw, 32px);
+  align-items: start;
+  padding-block: clamp(22px, 2.6vw, 36px);
+  border-top: 1px solid rgba(0,0,0,.16);
+  color: inherit;
+}
+
+/* O filete da secao ja abre a lista: o do primeiro projeto vinha logo abaixo
+   dele e ficavam duas linhas paralelas a poucos pixels uma da outra. */
+.project:first-of-type .project__link{ border-top: 0; }
+
+.project:last-of-type .project__link{
+  border-bottom: 1px solid rgba(0,0,0,.16);
+}
+
+.project__link--breve{ cursor: default; }
+
+/* A coluna estica ate a altura da linha, que a capa define. E isso que
+   permite o "visualizar" cair no pe dela, alinhado com a base da imagem,
+   em vez de logo abaixo do paragrafo. */
+.project__info{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+}
+
+.project__name{
+  margin: 0;
+  font-size: clamp(26px, 3vw, 60px);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -.045em;
+}
+
+.project__kind{
+  margin: clamp(10px, 1vw, 14px) 0 0;
+  font-size: clamp(11px, .85vw, 13px);
+  font-weight: 300;
+  letter-spacing: .06em;
+  color: var(--tag);
+}
+
+/* Texto do projeto: duas frases num paragrafo so, a mesma unidade de prosa
+   que servicos e processo usam. Foi a lista de entregas que saiu daqui, e com
+   ela o rotulo, os bullets e tres dos seis niveis de texto que a coluna
+   empilhava. O cap de medida e unico agora: com dois caps diferentes, 42ch no
+   paragrafo e 42ch na lista com fontes diferentes, os dois blocos quebravam em
+   larguras distintas e liam como coisas separadas. */
+.project__desc{
+  margin: clamp(16px, 1.8vw, 24px) 0 0;
+  max-width: 40ch;
+  font-size: clamp(14px, 1.15vw, 18px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.005em;
+  color: rgba(0,0,0,.78);
+}
+
+/* "visualizar" no pe da coluna, no canto inferior esquerdo da linha. E um
+   <span>, e nao um <a>: a linha inteira ja e o link, e ancora dentro de
+   ancora e HTML invalido. O sublinhado e o mesmo idioma de link da lista do
+   sobre, um filete de 1px em currentColor.
+   O margin-top auto empurra para a base da coluna esticada; o padding-top e
+   o piso de respiro para quando a coluna nao estica, no empilhamento do
+   mobile. */
+.project__abrir,
+.project__breve{
+  margin-top: auto;
+  padding-top: clamp(22px, 2.4vw, 34px);
+}
+
+.project__abrir{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: clamp(14px, 1.1vw, 17px);
+  font-weight: 400;
+  color: var(--black);
+}
+
+.project__abrir-texto{
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+}
+
+/* a seta sai na diagonal do proprio movimento dela, para dizer "abre fora" */
+.project__abrir-seta{
+  flex: none;
+  transition: translate .35s var(--ease);
+}
+
+.project__link:hover .project__abrir-seta{ translate: 2px -2px; }
+
+.project__breve{
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  color: var(--tag);
+}
+
+
+/* A capa: um quadro so para as tres, que e o que mantem elas alinhadas. Cada
+   linha e um grid separado, entao sem um quadro comum as tres capas comecariam
+   em alturas diferentes e a coluna perderia o prumo.
+   A medida vem das capas, e nao o contrario. As tres nao tem exatamente a
+   mesma proporcao: LUME 1.940, Camila 1.968, Mansan 1.884. O quadro fica na
+   do meio, que e a da LUME: assim ela nao perde nada, a Camila perde 0,7% de
+   cada lado e o Mansan 2,9% da altura, contra os 5% que a Camila perdia no
+   quadro antigo. */
+.project__media{
+  position: relative;
+  overflow: clip;
+  aspect-ratio: 1746 / 900;
+  background: var(--card-bg);
+  container-type: inline-size;
+  transition: box-shadow .4s var(--ease);
+}
+
+.project__link:hover .project__media{
+  box-shadow: 0 16px 40px rgba(0,0,0,.18);
+}
+
+.project__shot{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 1.4s var(--ease);
+}
+
+.project__link:hover .project__shot{ transform: scale(1.03); }
+
+/* Alinhado a direita, embaixo da coluna das capas: o olho termina a lista
+   ali, e nao na coluna de texto. O display vira flex para o margin-left auto
+   pegar, porque o .cta nasce inline-flex e margem automatica nao move caixa
+   de nivel inline. */
+/* O seletor carrega .projects de proposito: .cta e declarado depois, na
+   secao sobre, e com a mesma especificidade ele devolvia o inline-flex e a
+   margem do topo, deixando o botao encostado na esquerda. */
+.projects .projects__todos{
+  display: flex;
+  width: fit-content;
+  margin: clamp(18px, 2vw, 30px) 0 0 auto;
+}
+
+/* entrada da linha ao cruzar a margem inferior */
+.js .project{
+  opacity: 0;
+  translate: 0 18px;
+  transition: opacity .8s var(--ease), translate .8s var(--ease);
+}
+
+.project.is-visible{
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* ---------------------------------------------------------
+   REVELACAO NO SCROLL
+   --------------------------------------------------------- */
+
+.reveal{
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .9s var(--ease), transform .9s var(--ease);
+}
+
+.reveal.is-visible{
+  opacity: 1;
+  transform: none;
+}
+
+
+/* =========================================================
+   INDICADOR DE SCROLL, MENU, SECOES NOVAS E RODAPE
+   ========================================================= */
+
+/* ---- indicador de scroll ----
+   Sem texto: so uma seta fina apontando para baixo, que respira devagar. */
+.scroll-cue{
+  position: absolute;
+  left: 50%;
+  bottom: clamp(28px, 6svh, 56px);
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: rgba(255,255,255,.7);
+  pointer-events: none;
+}
+
+.scroll-cue__seta{
+  display: block;
+  width: 22px;
+  height: auto;
+  animation: seta-desce 2.1s var(--ease) infinite;
+}
+
+@keyframes seta-desce{
+  0%, 100% { transform: translateY(-3px); opacity: .45; }
+  50%      { transform: translateY(4px);  opacity: 1; }
+}
+
+/* ---- painel lateral ----
+   Um componente, duas instancias: o de contato, que o "contato" da barra abre
+   em qualquer largura, e o de navegacao, que o hamburguer abre so no mobile.
+
+   A lamina e feita do mesmo material das outras superficies escuras do site:
+   o gradiente, num canvas de 100svh recortado por ela, exatamente como a intro
+   e o rodape fazem. Era esse o desencaixe da versao anterior, que era vidro
+   cinza: o site nao tem vidro em lugar nenhum, tem preto, branco e o gradiente.
+
+   O veu continua desfocando o que esta atras, mas agora ele e um escurecedor,
+   e nao uma segunda camada de vidro.
+
+   O estado visual vem do aria-hidden do proprio painel, e nao de uma classe no
+   <html>: sao dois paineis, e uma classe de estado unica abriria os dois. */
+.painel{
+  position: fixed;
+  inset: 0;
+  z-index: 18;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(20,20,20,.55);
+  backdrop-filter: blur(24px) saturate(115%);
+  -webkit-backdrop-filter: blur(24px) saturate(115%);
+  color: var(--white);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .45s var(--ease), visibility 0s linear .45s;
+}
+
+.painel[aria-hidden="false"]{
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .45s var(--ease), visibility 0s;
+}
+
+/* Sem backdrop-filter o alfa deixaria o texto da pagina passar nitido por tras
+   dos links, entao o veu vira chapado. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .painel{ background: rgba(20,20,20,.92); }
+}
+
+/* Abaixo de 460px de tela a lamina ocupa a largura toda sozinha, pelo min(),
+   sem precisar de media query.
+
+   O respiro do topo e a altura da barra presa, e nao a posicao dela no
+   momento: durante a intro ela flutua no meio da tela, e seguir isso abria um
+   vazio de quase 500px dentro da lamina e jogava o conteudo para fora. A barra
+   passa por cima do painel nesses primeiros 400px de rolagem, que e o que ela
+   faz no resto do site tambem. */
+.painel__lamina{
+  position: relative;
+  isolation: isolate;
+  width: min(460px, 100%);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: var(--nav-h);
+  background: var(--dark);
+
+  /* a lamina entra deslizando da direita, com a curva do resto do site; o veu
+     so aparece. E um movimento so, e nao dois concorrentes. */
+  translate: 100% 0;
+  transition: translate .45s var(--ease);
+}
+
+.painel[aria-hidden="false"] .painel__lamina{ translate: 0 0; }
+
+/* O canvas tem a medida da viewport, e nao a da lamina, e a lamina recorta o
+   pedaco da direita. O shader normaliza o campo por min(largura, altura): num
+   canvas de 460 de largura as manchas sairiam com menos da metade do tamanho
+   que tem na intro e no rodape, e o gradiente leria como outro gradiente.
+   Assim a lamina mostra literalmente a mesma fatia do mesmo campo que a
+   pagina mostra naquela posicao da tela. */
+.painel__shader{
+  position: absolute;
+  left: auto;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  z-index: -2;
+  display: block;
+  width: 100vw;
+  height: 100svh;
+}
+
+/* O escurecedor que garante o contraste do texto sobre o campo claro do
+   gradiente. Mais denso em cima e embaixo, que e onde o texto se concentra,
+   e mais leve no meio, onde o gradiente pode aparecer. */
+.painel__lamina::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(20,20,20,.88) 0%,
+    rgba(20,20,20,.66) 42%,
+    rgba(20,20,20,.86) 100%);
+}
+
+/* O X fica no canto superior direito da lamina, que e o canto que a pessoa
+   olha para sair. Fora do corpo, para nao entrar na centralizacao dele. */
+.painel__fechar{
+  position: absolute;
+  top: calc(var(--nav-h) + clamp(10px, 1.6vh, 18px));
+  right: clamp(var(--gutter), 5vw, 34px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+}
+
+.painel__fechar:hover{
+  background-color: var(--white);
+  border-color: var(--white);
+  color: var(--dark);
+}
+
+.painel__corpo{
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: clamp(var(--gutter), 5vw, 34px);
+}
+
+/* A estrela abre a lamina como abre o rodape, e e ela que diz que esta e uma
+   superficie da casa e nao uma gaveta do navegador. */
+.painel__estrela{
+  display: block;
+  flex: none;
+  width: 44px;
+  height: 46px;
+  margin-bottom: clamp(14px, 2.2vh, 22px);
+  background-color: currentColor;
+  -webkit-mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+/* mesma voz da chamada do rodape, na escala da lamina */
+.painel__frase{
+  margin: 0;
+  max-width: 15ch;
+  padding-bottom: clamp(20px, 3.4vh, 34px);
+  font-size: clamp(27px, 4vh, 40px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+/* Os filetes sao a divisao, na mesma espessura e no mesmo alfa das linhas que
+   separam os projetos e fecham o rodape. */
+.painel__bloco{
+  padding-block: clamp(16px, 2.8vh, 28px);
+  border-top: 1px solid rgba(255,255,255,.18);
+}
+
+.painel__rotulo{
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: rgba(255,255,255,.75);
+}
+
+.painel__lista{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: clamp(16px, 1.3vw, 19px);
+  font-weight: 400;
+}
+
+.painel__lista a{
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255,255,255,.4);
+  transition: border-color .3s var(--ease);
+}
+
+.painel__lista a:hover{ border-color: var(--white); }
+
+.painel__links{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.painel__links a{
+  display: block;
+  font-size: clamp(30px, 9vw, 46px);
+  font-weight: 500;
+  line-height: 1.16;
+  letter-spacing: -.035em;
+}
+
+/* a assinatura fecha a lamina, como fecha o menu e o rodape */
+.painel__assinatura{
+  flex: none;
+  margin: 0;
+  padding: clamp(16px, 2.4vh, 24px) clamp(var(--gutter), 5vw, 34px);
+  border-top: 1px solid rgba(255,255,255,.18);
+  font-size: 14px;
+  color: rgba(255,255,255,.8);
+}
+
+/* Telas baixas, tipo um iPhone SE em pe: sem isto a lamina passa da altura da
+   viewport e a assinatura, que e o fecho dela, cai abaixo da dobra. */
+@media (max-height: 720px){
+  .painel__estrela{
+    width: 34px;
+    height: 36px;
+    margin-bottom: 12px;
+  }
+
+  .painel__frase{
+    padding-bottom: clamp(14px, 2.4vh, 22px);
+    font-size: clamp(24px, 3.6vh, 30px);
+  }
+
+  .painel__bloco{ padding-block: clamp(12px, 2vh, 20px); }
+
+  .painel__links a{ font-size: clamp(26px, 7.5vw, 34px); }
+}
+
+
+
+/* ---- SECAO 3, sobre ---- */
+.sobre{
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: clamp(24px, 4vw, 56px);
+  padding-top: clamp(48px, 6vw, 88px);
+  padding-bottom: clamp(28px, 3.4vw, 56px);
+}
+
+/* O retangulo cinza e o fundo do proprio quadro, e nao um bloco separado:
+   se a foto faltar, ele continua la e o layout nao muda. */
+.sobre__retrato{
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--card-bg);
+  overflow: clip;
+}
+
+.sobre__foto{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.sobre__resumo{
+  margin: 0 0 clamp(18px, 2.2vw, 32px);
+  max-width: 30ch;
+  font-size: clamp(24px, 2.5vw, 46px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+}
+
+.sobre__paragrafo{
+  margin: 0 0 clamp(14px, 1.6vw, 22px);
+  max-width: 52ch;
+  font-size: clamp(16px, 1.45vw, 23px);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -.01em;
+}
+
+/* o de apoio recua um degrau, para os tres nao competirem */
+.sobre__paragrafo--apoio{
+  margin-bottom: clamp(26px, 3.2vw, 44px);
+  font-size: clamp(14px, 1.15vw, 18px);
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgba(0,0,0,.66);
+}
+
+.sobre__bloco + .sobre__bloco{ margin-top: clamp(28px, 3.4vw, 46px); }
+
+.sobre__rotulo{
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: .04em;
+  text-transform: lowercase;
+  color: var(--tag);
+}
+
+.sobre__lista{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px clamp(22px, 2.6vw, 36px);
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 400;
+}
+
+.sobre__lista a{ border-bottom: 1px solid currentColor; }
+
+/* A coluna de texto e tao alta quanto a foto, porque as duas sao itens do
+   mesmo grid. Virando ela em coluna flex, o margin-top auto do CTA empurra
+   ele para o fim dessa altura, que e a base da foto. */
+.sobre__texto{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* O auto so vale onde a coluna estica, que e no grid de duas colunas: e ele
+   que leva o CTA para a base da foto. No mobile a coluna tem a altura do
+   proprio conteudo, o auto resolvia para zero e, como ele ganha do .cta por
+   especificidade, o botao encostava na lista de redes sem respiro nenhum. */
+@media (min-width: 861px){
+  .sobre__texto .cta{ margin-top: auto; }
+}
+
+/* pontos separando as ferramentas: no ::after para que uma linha que quebra
+   termine com o ponto, em vez de a seguinte comecar com ele */
+.sobre__lista--pontos{ gap: 10px 0; }
+
+.sobre__lista--pontos li:not(:last-child)::after{
+  content: "·";
+  margin: 0 .7em;
+  color: var(--tag);
+}
+
+/* CTA da secao sobre: ocupa o vazio da coluna de texto */
+.cta{
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: clamp(32px, 4vw, 56px);
+  padding: 16px 26px;
+  border: 1px solid rgba(0,0,0,.3);
+  border-radius: 999px;
+  font-size: clamp(15px, 1.2vw, 19px);
+  font-weight: 500;
+  transition: background-color .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+}
+
+.cta:hover{
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.cta__estrela{
+  width: 17px;
+  height: 18px;
+  flex: none;
+  background-color: currentColor;
+  -webkit-mask: url(../assets/svg/star-2.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-2.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+/* ---- SECAO 4, servicos, e SECAO 5, processo ---- */
+.servicos,
+.processo{
+  padding-top: clamp(40px, 5vw, 72px);
+  padding-bottom: clamp(28px, 3.4vw, 56px);
+}
+
+/* a ultima secao antes do rodape escuro ainda precisa do respiro cheio */
+.processo{ padding-bottom: clamp(72px, 8vw, 120px); }
+
+.servico{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: clamp(12px, 2vw, 32px);
+  align-items: start;
+  padding-block: clamp(22px, 2.6vw, 36px);
+  border-top: 1px solid rgba(0,0,0,.16);
+}
+
+.servicos .servico:last-child{ border-bottom: 1px solid rgba(0,0,0,.16); }
+
+/* ---- processo: cada etapa e um desenho da construcao da estrela ----
+   Os seis diagramas saem da geometria real do star-4.svg: 12 pontas a cada
+   30 graus, vale interno em 0.382 do raio. Vao do circulo de compasso ate
+   a estrela fechada. */
+.processo__lista{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.etapa{
+  display: flex;
+  flex-direction: column;
+  padding: 0 clamp(16px, 2.4vw, 40px) clamp(28px, 3vw, 44px);
+  border-left: 1px solid rgba(0,0,0,.16);
+}
+
+.etapa:first-child{ border-left: 0; }
+
+/* Cada etapa entra em sequencia quando a secao aparece. O atraso vem do
+   indice que o JS grava em --n.
+
+   O intervalo muda com o numero de colunas, e nao por capricho: o escalonamento
+   existe para sequenciar coisas que aparecem JUNTAS. Com duas ou quatro
+   colunas, as quatro etapas entram na mesma tela e 1s entre elas deixava a
+   ultima chegar 3s depois da primeira, tempo demais para uma fila que ja esta
+   toda visivel. Empilhadas no mobile, cada uma entra quando voce rola ate ela,
+   e o intervalo maior nao atrasa nada. */
+.js .etapa{
+  opacity: 0;
+  translate: 0 26px;
+  transition:
+    opacity .9s var(--ease),
+    translate .9s var(--ease);
+  transition-delay: calc(var(--n, 0) * 1s);
+}
+
+@media (min-width: 861px){
+  .js .etapa{ transition-delay: calc(var(--n, 0) * .5s); }
+}
+
+.processo.is-visible .etapa{
+  opacity: 1;
+  translate: 0 0;
+}
+
+.etapa__figura{
+  display: block;
+  margin-bottom: clamp(20px, 2.4vw, 36px);
+}
+
+.etapa__desenho{
+  display: block;
+  width: 100%;
+  height: auto;
+  color: var(--black);
+  /* o traco fino da referencia nao pode engordar junto com o desenho */
+  vector-effect: non-scaling-stroke;
+}
+
+/* a estrela fechada gira devagar, igual as outras do site. transform-box
+   fill-box faz a origem virar o centro do proprio desenho, e nao o canto
+   do viewBox. */
+.etapa__estrela{
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: star-spin 22s linear infinite;
+}
+
+.servico__titulo{
+  margin: 0;
+  font-size: clamp(26px, 3vw, 60px);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: -.045em;
+}
+
+.etapa__titulo{
+  margin: 0 0 10px;
+  padding-top: clamp(14px, 1.6vw, 22px);
+  border-top: 1px solid rgba(0,0,0,.16);
+  font-size: clamp(20px, 2.1vw, 42px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+}
+
+.servico__desc,
+.etapa__desc{
+  margin: 0;
+  max-width: 44ch;
+  font-size: clamp(15px, 1.35vw, 19px);
+  line-height: 1.5;
+  color: var(--tag);
+}
+
+.processo__lista{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- RODAPE ---- */
+.rodape{
+  position: relative;
+  background: var(--dark);
+  color: var(--white);
+  overflow: clip;
+}
+
+/* Mesmo gradiente da intro, em um segundo canvas.
+
+   O shader normaliza o campo por min(largura, altura) do canvas. Numa faixa
+   baixa e larga isso mostra uma fatia muito mais larga do campo e as manchas
+   encolhem. Para a escala bater com a da intro, o canvas mantem a altura da
+   viewport e o rodape recorta o meio dele. */
+.rodape__shader{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  display: block;
+  width: 100%;
+  height: 100svh;
+}
+
+/* O respiro grande do topo existia para caber o degrade que foi removido.
+   Sem ele o rodape so precisa do proprio conteudo. */
+.rodape__conteudo{
+  position: relative;
+  z-index: 2;
+  padding-top: clamp(52px, 8svh, 96px);
+  padding-bottom: clamp(44px, 7svh, 80px);
+}
+
+.rodape__estrela{
+  display: block;
+  width: 55px;
+  height: 55px;
+  margin-bottom: clamp(16px, 2vw, 28px);
+  background-color: currentColor;
+  -webkit-mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+/* duas colunas: a chamada a esquerda, os contatos a direita, para o lado
+   direito nao ficar vazio */
+.rodape__topo{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+
+.rodape__chamada{
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 92px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.045em;
+}
+
+/* Os contatos sairam da coluna da direita: agora correm em linha no pe do
+   rodape, logo acima da assinatura. */
+.rodape__contatos{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: baseline;
+  gap: 12px clamp(22px, 3vw, 52px);
+  margin-top: clamp(36px, 5vw, 72px);
+  font-size: clamp(16px, 1.5vw, 21px);
+}
+
+.rodape__contatos a{
+  position: relative;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255,255,255,.4);
+  transition: border-color .3s var(--ease);
+}
+
+.rodape__contatos a:hover{ border-color: var(--white); }
+
+/* =========================================================
+   RESPONSIVO E MOVIMENTO REDUZIDO
+   Ficam no fim de proposito: precisam vencer as regras base.
+   ========================================================= */
+
+@media (max-width: 1000px){
+  .projects{ grid-template-columns: minmax(0, 1fr); }
+
+  .processo__lista{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .etapa:nth-child(3){ border-left: 0; }
+  .etapa:nth-child(n+3){ margin-top: clamp(36px, 6vw, 64px); }
+}
+
+
+@media (max-width: 860px){
+  /* ---- intro: marca, estrela e assinatura como um bloco unico e centrado.
+     Fica assim ate a pagina sair da intro; nada se espalha, e o menu nao
+     aparece aqui para nao brigar com o indicador de scroll. ---- */
+  /* Intro: "delarge", estrela e assinatura numa linha so, com a estrela
+     entre os dois textos e o conjunto inteiro centralizado. Prender a
+     estrela no centro da tela empurrava o grupo para a direita, porque a
+     assinatura e bem mais larga que a marca. */
+  .navbar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand{ order: 1; }
+  .brand__slot{ order: 2; margin-right: 0; }
+  .navbar__tagline{ order: 3; }
+
+  .navbar__links{ display: none; }
+  .navbar__contact,
+  .nav-toggle{ display: none; }
+
+  /* Mesmo corpo da marca: os dois textos da intro sao a mesma linha. O
+     margin-right vem da regra do desktop e precisa ser zerado, senao ele
+     empurra o grupo inteiro para a esquerda do centro. */
+  .navbar__tagline{
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  /* no mobile a estrela ja nasce dentro do bloco, sem viagem nem troca */
+  .js .navbar:not(.is-assembled) .brand__slot{ transform: none; }
+  .js .navbar:not(.is-assembled) .brand__name{ transform: none; }
+  .navbar.is-assembled .brand__slot{ animation: none; opacity: 1; }
+
+  /* ---- passou a intro: barra de navegacao de verdade ---- */
+  .navbar.is-pinned{ justify-content: flex-start; gap: 0; }
+  .navbar.is-pinned .brand__slot{ order: 1; margin-right: 6px; }
+  .navbar.is-pinned .brand{ order: 2; }
+  .navbar.is-pinned .navbar__tagline{ display: none; }
+
+  .navbar.is-pinned .navbar__contact{
+    display: block;
+    order: 3;
+    margin: 0 18px 0 auto;
+  }
+
+  .navbar.is-pinned .nav-toggle{ display: block; order: 4; }
+
+  /* ---- cards: sem hover, a identificacao mora abaixo da capa e abre na
+     mesma borda esquerda do rotulo da secao. Centralizado, cada nivel comecava
+     num x diferente e a coluna nao lia como uma coluna. ---- */
+  .project__info{
+    position: static;
+    padding: clamp(18px, 5vw, 24px) 0 0;
+    color: var(--black);
+    opacity: 1;
+    translate: none;
+    align-items: flex-start;
+  }
+
+
+  .project__link:hover .project__media{ box-shadow: none; }
+  .project__link:hover .project__shot{ transform: none; }
+
+  /* ---- secoes ---- */
+  .sobre{ grid-template-columns: 1fr; }
+  .servico{ grid-template-columns: 1fr; row-gap: 6px; }
+
+  /* a linha do projeto empilha: capa, depois a coluna de texto inteira, com
+     o "visualizar" fechando ela */
+  .project__link{
+    grid-template-columns: 1fr;
+    row-gap: clamp(18px, 5vw, 22px);
+  }
+
+  .project__info{ order: 3; }
+  .project__media{ order: 2; }
+
+
+  /* o cta era o unico da secao que continuava na direita, com a coluna toda
+     alinhada a esquerda. No desktop a regra base segue valendo. */
+  .projects .projects__todos{
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .processo__lista{ grid-template-columns: minmax(0, 1fr); }
+
+  .etapa{
+    padding-inline: 0;
+    border-left: 0;
+  }
+
+  .etapa:nth-child(n+2){ margin-top: clamp(40px, 9vw, 64px); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+
+  *,
+  *::before,
+  *::after{
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .reveal{ opacity: 1; transform: none; }
+
+  /* sem intro: a nav ja nasce montada e a estrela nao gira.
+     Os projetos sao resolvidos pelo JS, que marca is-visible de saida. */
+  .js .navbar .letra{ opacity: 1; filter: none; transform: none; }
+  .js .navbar .brand__slot{ opacity: 1; transform: none; animation: none; }
+
+  /* os textos de leitura nascem lidos por inteiro */
+  .js .leitura .letra-lida,
+  .js .leitura .manifesto__star{ opacity: 1; }
+
+  /* nada gira nem corre em looping */
+  .scroll-cue__seta{ animation: none; transform: none; }
+  .brand__star,
+  .manifesto__star,
+  .rodape__estrela,
+  .painel__estrela,
+  .etapa__estrela{ animation: none; }
+
+}
+
+/* =========================================================
+   PAGINA DE PROJETOS
+   Indice, e nao cards: a home ja mostra as capas. Aqui a
+   organizacao e uma lista longa, que aguenta crescer.
+   ========================================================= */
+
+.pagina-indice{ background: var(--white); }
+
+/* aqui a navbar tem fundo proprio, entao o negativo da home nao se aplica:
+   ele inverteria o branco dela para preto */
+.navbar--fixa{
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  justify-content: space-between;
+  background: var(--white);
+  color: var(--black);
+  mix-blend-mode: normal;
+}
+
+.navbar__voltar{
+  margin-left: auto;
+  border-bottom: 1px solid currentColor;
+}
+
+/* a navbar do indice nao herda a ordem do bloco centralizado da intro */
+.navbar--fixa .brand__slot{ order: 0; margin-right: 6px; }
+.navbar--fixa .brand{ order: 0; }
+
+.indice{
+  padding-top: clamp(48px, 8vw, 120px);
+  padding-bottom: clamp(80px, 10vw, 160px);
+}
+
+.indice__titulo{
+  margin: 0 0 clamp(32px, 4vw, 64px);
+  font-size: clamp(40px, 7vw, 110px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.05em;
+}
+
+.indice__lista{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.linha{
+  position: relative;
+  border-top: 1px solid rgba(0,0,0,.16);
+}
+
+.linha:last-child{ border-bottom: 1px solid rgba(0,0,0,.16); }
+
+.linha__link{
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1.1fr) minmax(0, 1.3fr) 70px 40px;
+  align-items: center;
+  gap: clamp(12px, 2vw, 32px);
+  padding-block: clamp(20px, 2.4vw, 34px);
+  color: inherit;
+}
+
+.linha--breve .linha__link{ cursor: default; }
+
+.linha__num{
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--tag);
+}
+
+.linha__nome{
+  font-size: clamp(22px, 2.6vw, 42px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.04em;
+}
+
+.linha__tipo{
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 300;
+  color: var(--tag);
+}
+
+.linha__ano{
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--tag);
+}
+
+.linha__seta{
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0,0,0,.28);
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease);
+}
+
+.linha__link:hover .linha__seta{
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.linha__breve{
+  justify-self: end;
+  padding: 5px 10px;
+  border: 1px solid rgba(0,0,0,.2);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  color: var(--tag);
+  white-space: nowrap;
+}
+
+/* previa que segue o cursor */
+.linha__previa{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: clamp(200px, 22vw, 320px);
+  translate: calc(var(--x, 0px) - 50%) calc(var(--y, 0px) - 50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s var(--ease);
+}
+
+.linha__previa img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.linha:hover .linha__previa{ opacity: 1; }
+
+/* A pagina do indice e curta: sem isso o rodape para no meio da tela e
+   sobra branco embaixo dele. */
+.pagina-indice{
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pagina-indice .indice{ flex: 1 0 auto; }
+
+/* rodape curto: contatos em linha ao lado da estrela, sem a chamada */
+.rodape--curto .rodape__conteudo{
+  padding-top: clamp(36px, 6svh, 64px);
+  padding-bottom: clamp(28px, 4svh, 44px);
+}
+
+.rodape--curto .rodape__topo{
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+}
+
+.rodape--curto .rodape__estrela{
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0;
+}
+
+.rodape--curto .rodape__contatos{
+  margin-top: 0;
+  gap: 10px clamp(18px, 2.5vw, 40px);
+  font-size: clamp(15px, 1.3vw, 18px);
+}
+
+@media (max-width: 860px){
+  .linha__link{
+    grid-template-columns: 40px minmax(0, 1fr) 36px;
+    row-gap: 4px;
+  }
+
+  .linha__tipo{ grid-column: 2; }
+  .linha__ano{ display: none; }
+  .linha__seta,
+  .linha__breve{ grid-column: 3; grid-row: 1; }
+  .linha__previa{ display: none; }
+}

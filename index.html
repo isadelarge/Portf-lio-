@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>delarge · ui/ux · web designer</title>
+<meta name="description" content="Web designer independente. Construo sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100&family=Zalando+Sans:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Fundo escuro da intro. A navbar nao vive dentro dele: ela e sticky no
+     body, entao atravessa as secoes sem duplicar. -->
+<div class="backdrop" id="topo">
+  <canvas id="shader-intro" class="backdrop__shader" data-shader aria-hidden="true"></canvas>
+  <!-- Figma 1:35 — indicador de scroll -->
+  <div class="scroll-cue" aria-hidden="true">
+    <svg class="scroll-cue__seta" viewBox="0 0 24 14" fill="none"
+         stroke="currentColor" stroke-width="1.25" stroke-linecap="square">
+      <path d="M1 1 12 12 23 1"/>
+    </svg>
+  </div>
+</div>
+
+<div class="intro-espaco"></div>
+
+<!-- NAVBAR unica — Figma 1:5 (intro) -> 1:9 (montada) -> 1:17 (sobre o claro).
+     O mix-blend-mode fica no <nav>, e nao nos filhos: position sticky cria
+     contexto de empilhamento, e blend em filho mescla so dentro dele, contra
+     nada. Por isso o painel do menu mora fora desta tag. -->
+<nav class="navbar" id="nav" aria-label="Principal">
+  <!-- A faixa da barra e uma janela para o mesmo campo do shader da intro: um
+       canvas de 100svh colado no topo da viewport, recortado pela altura da
+       barra. Nao da para reaproveitar o canvas da intro, que fica embaixo da
+       folha branca, nem para usar uma faixa curta: o shader normaliza o campo
+       por min(largura, altura), e num canvas baixo e largo o mesmo campo
+       apareceria em outra escala. Os dois nascem no mesmo forEach, com a
+       mesma receita e a mesma semente, entao desenham o mesmo quadro. -->
+  <div class="navbar__fundo" aria-hidden="true">
+    <canvas id="shader-nav" class="navbar__shader" data-shader data-shader-recorte></canvas>
+  </div>
+  <span class="brand__slot" aria-hidden="true"><span class="brand__star"></span></span>
+  <a class="brand" href="#manifesto"><span class="brand__name mask"><span>delarge</span></span></a>
+  <ul class="navbar__links">
+    <li><a href="#projetos"><span class="mask"><span>projetos</span></span></a></li>
+    <li><a href="#sobre"><span class="mask"><span>sobre</span></span></a></li>
+    <li><a href="#servicos"><span class="mask"><span>serviços</span></span></a></li>
+  </ul>
+  <p class="navbar__tagline mask"><span>ui/ux · web designer</span></p>
+  <button class="navbar__contact" id="contato-toggle" type="button"
+          aria-controls="contato-menu" aria-expanded="false"><span class="mask"><span>contato</span></span></button>
+  <button class="nav-toggle" id="nav-toggle" type="button"
+          aria-controls="menu" aria-expanded="false" aria-label="Abrir menu">
+    <span></span><span></span>
+  </button>
+</nav>
+
+<div class="intro-espaco"></div>
+
+<!-- Dois paineis, o mesmo componente. Moram fora do <nav> pelo mesmo motivo:
+     no caminho sem scroll timeline a barra ainda usa mix-blend-mode, e um
+     filho dela sairia invertido. O estado visual vem do proprio aria-hidden,
+     e nao de uma classe no <html>, senao os dois abririam juntos. -->
+
+<!-- Contato: abre pelo "contato" da barra, em qualquer largura. -->
+<div class="painel" id="contato-menu" aria-hidden="true">
+  <div class="painel__lamina">
+    <canvas class="painel__shader" data-shader data-shader-pausa="#contato-menu" aria-hidden="true"></canvas>
+
+    <button class="painel__fechar" type="button" aria-label="Fechar contato">
+      <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
+           stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/>
+      </svg>
+    </button>
+
+    <div class="painel__corpo">
+      <span class="painel__estrela" aria-hidden="true"></span>
+      <p class="painel__frase">Me conte mais sobre a sua ideia.</p>
+
+      <div class="painel__bloco">
+        <h2 class="painel__rotulo">contato</h2>
+        <ul class="painel__lista">
+          <li><a href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+          <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="painel__bloco">
+        <h2 class="painel__rotulo">redes</h2>
+        <ul class="painel__lista">
+          <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
+          <li><a href="https://www.linkedin.com/in/isabela-fernandes-40247a234/" target="_blank" rel="noopener noreferrer">linkedin</a></li>
+          <li><a href="https://www.behance.net/isabelaalves52" target="_blank" rel="noopener noreferrer">behance</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="painel__assinatura">ui/ux · web designer</p>
+  </div>
+</div>
+
+<!-- Navegacao: so no mobile, onde os links nao cabem na barra. No desktop eles
+     ficam la, e repetir aqui seria informacao a toa. -->
+<div class="painel" id="menu" aria-hidden="true">
+  <div class="painel__lamina">
+    <canvas class="painel__shader" data-shader data-shader-pausa="#menu" aria-hidden="true"></canvas>
+
+    <div class="painel__corpo">
+      <span class="painel__estrela" aria-hidden="true"></span>
+
+      <nav aria-label="Seções">
+        <ul class="painel__links">
+          <li><a href="#projetos">projetos</a></li>
+          <li><a href="#sobre">sobre</a></li>
+          <li><a href="#servicos">serviços</a></li>
+          <li><a href="#processo">processo</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="painel__assinatura">ui/ux · web designer</p>
+  </div>
+</div>
+
+<!-- CONTEUDO CLARO -->
+<main class="page">
+
+  <!-- SECAO 1 — Manifesto — Figma 1:25, 1:20, 1:26 -->
+  <section class="manifesto shell" id="manifesto">
+    <h1 class="manifesto__text leitura" data-node-id="1:25">
+      Web designer <span class="manifesto__keep">independente. <span class="manifesto__star" aria-hidden="true"></span></span> Construo
+      sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding para dar vida a sites
+      <strong>modernos, funcionais e com personalidade.</strong>
+    </h1>
+  </section>
+
+  <!-- SECAO 2 — Projetos — Figma 1:27 … 1:73 -->
+  <div class="rule shell" id="projetos" data-node-id="1:27">
+    <span class="rule__label">projetos</span>
+    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+  </div>
+
+  <section class="projects shell" aria-label="Projetos">
+
+    <!-- TODO trocar o href e a capa do Mansan quando ele subir -->
+    <article class="project" data-node-id="1:29">
+      <a class="project__link" href="https://lumebylexy.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div class="project__info">
+          <h3 class="project__name">LUME by Lexy</h3>
+          <p class="project__kind">velas artesanais · site e catálogo</p>
+          <p class="project__desc">A marca do atelier já existia, o site não. Construí do zero e integrei cada aroma à encomenda direta no WhatsApp.</p>
+          <span class="project__abrir">
+            <span class="project__abrir-texto">visualizar</span>
+            <svg class="project__abrir-seta" viewBox="0 0 16 16" width="13" height="13" fill="none"
+                 stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="project__media">
+          <img class="project__shot" src="assets/img/lumebylexy.webp" alt="Capa do projeto LUME by Lexy" width="1746" height="900" loading="lazy" decoding="async">
+        </div>
+      </a>
+    </article>
+
+    <article class="project" data-node-id="1:38">
+      <a class="project__link" href="https://camila-torres-psicologa.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <div class="project__info">
+          <h3 class="project__name">Camila Torres</h3>
+          <p class="project__kind">psicologia clínica · site institucional</p>
+          <p class="project__desc">O primeiro contato de quem procura terapia. Do acolhimento ao agendamento, defini tom, paleta e hierarquia pensando no paciente.</p>
+          <span class="project__abrir">
+            <span class="project__abrir-texto">visualizar</span>
+            <svg class="project__abrir-seta" viewBox="0 0 16 16" width="13" height="13" fill="none"
+                 stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="project__media">
+          <img class="project__shot" src="assets/img/camillatorres.webp" alt="Capa do projeto Camila Torres" width="1736" height="882" loading="lazy" decoding="async">
+        </div>
+      </a>
+    </article>
+
+    <article class="project" data-node-id="1:47">
+      <div class="project__link project__link--breve">
+        <div class="project__info">
+          <h3 class="project__name">Mansan Gallery</h3>
+          <p class="project__kind">arte contemporânea · concept redesign</p>
+          <p class="project__desc">Uma galeria reduzida a espaço, luz e obra. Desenhei identidade e navegação em tela cheia para a obra chegar antes do texto.</p>
+          <span class="project__breve">em breve</span>
+        </div>
+
+        <div class="project__media">
+          <img class="project__shot" src="assets/img/mansangallery.webp" alt="Capa do projeto Mansan Gallery" width="1863" height="989" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </article>
+
+    <a class="cta projects__todos" href="projetos.html">
+      <span class="cta__estrela" aria-hidden="true"></span>
+      <span>ver todos os projetos</span>
+    </a>
+  </section>
+
+  <!-- SECAO 3 — Sobre -->
+  <div class="rule shell" id="sobre">
+    <span class="rule__label">sobre</span>
+    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+  </div>
+
+  <section class="sobre shell" aria-label="Sobre">
+    <div class="sobre__retrato">
+      <!-- Troque o arquivo mantendo o nome retrato.jpg e nada mais precisa mudar -->
+      <img class="sobre__foto" src="assets/img/retrato.jpg"
+           alt="Retrato de Isabela" width="1206" height="1744"
+           loading="lazy" decoding="async">
+    </div>
+
+    <div class="sobre__texto">
+      <!-- Os tres paragrafos sao uma unidade de leitura so: as letras sao
+           numeradas em sequencia continua, entao o texto acende do titulo ate
+           o fim do apoio como uma frase unica, igual ao manifesto. -->
+      <div class="sobre__prosa leitura">
+        <p class="sobre__resumo">Sou a Isabela, designer independente brasileira.</p>
+
+        <p class="sobre__paragrafo">Ajudo marcas e pessoas a construírem presenças digitais intencionais, alinhando sensibilidade estética, clareza e autonomia técnica.</p>
+
+        <p class="sobre__paragrafo sobre__paragrafo--apoio">Trabalho de ponta a ponta, do primeiro rascunho ao código no ar. Meu trabalho é movido por curiosidade e vontade constante de simplificar processos, tanto para quem visita o site quanto para quem está construindo o projeto comigo.</p>
+      </div>
+
+      <div class="sobre__bloco">
+        <h3 class="sobre__rotulo">ferramentas</h3>
+        <ul class="sobre__lista sobre__lista--pontos">
+          <li>Figma</li>
+          <li>Webflow</li>
+          <li>HTML, CSS e JavaScript</li>
+          <li>Claude Code</li>
+        </ul>
+      </div>
+
+      <div class="sobre__bloco">
+        <h3 class="sobre__rotulo">contato</h3>
+        <ul class="sobre__lista">
+          <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
+          <li><a href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+        </ul>
+      </div>
+
+      <div class="sobre__bloco">
+        <h3 class="sobre__rotulo">redes</h3>
+        <ul class="sobre__lista">
+          <li><a href="https://www.linkedin.com/in/isabela-fernandes-40247a234/" target="_blank" rel="noopener noreferrer">linkedin</a></li>
+          <li><a href="https://www.behance.net/isabelaalves52" target="_blank" rel="noopener noreferrer">behance</a></li>
+        </ul>
+      </div>
+
+      <a class="cta" href="#contato">
+        <span class="cta__estrela" aria-hidden="true"></span>
+        <span>vamos conversar sobre o seu site</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- SECAO 4 — Servicos -->
+  <div class="rule shell" id="servicos">
+    <span class="rule__label">serviços</span>
+    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+  </div>
+
+  <section class="servicos shell" aria-label="Serviços">
+    <article class="servico">
+      <h2 class="servico__titulo">Website Design</h2>
+      <p class="servico__desc">Interfaces intencionais e focadas no usuário. Organização de conteúdo, navegação intuitiva e identidade visual aplicadas para criar uma presença memorável.</p>
+    </article>
+
+    <article class="servico">
+      <h2 class="servico__titulo">Desenvolvimento</h2>
+      <p class="servico__desc">Transformação da interface em um site de alta performance. Implementação sob medida, código fluido, otimizado para SEO e pronto para conversão.</p>
+    </article>
+
+    <article class="servico">
+      <h2 class="servico__titulo">Suporte contínuo</h2>
+      <p class="servico__desc">Acompanhamento pós-lançamento para manter o site atualizado. Ajustes, novas demandas e manutenção com atendimento direto de quem construiu o projeto.</p>
+    </article>
+  </section>
+
+  <!-- SECAO 5 — Processo -->
+  <div class="rule shell" id="processo">
+    <span class="rule__label">processo</span>
+    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+  </div>
+
+  <section class="processo shell" aria-label="Processo">
+    <ol class="processo__lista">
+      <li class="etapa">
+        <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="72" cy="100" r="62"/><circle cx="128" cy="100" r="62"/><circle cx="100" cy="100" r="80"/></svg></span>
+        <h3 class="etapa__titulo">Contato e conversa</h3>
+        <p class="etapa__desc">Primeira troca para alinhar expectativas, entender o momento da sua marca e definir o projeto.</p>
+      </li>
+      <li class="etapa">
+        <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="100" cy="60" r="40"/><circle cx="120" cy="65.36" r="40"/><circle cx="134.64" cy="80" r="40"/><circle cx="140" cy="100" r="40"/><circle cx="134.64" cy="120" r="40"/><circle cx="120" cy="134.64" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="80" cy="134.64" r="40"/><circle cx="65.36" cy="120" r="40"/><circle cx="60" cy="100" r="40"/><circle cx="65.36" cy="80" r="40"/><circle cx="80" cy="65.36" r="40"/><circle cx="100" cy="100" r="80"/></svg></span>
+        <h3 class="etapa__titulo">Pesquisa</h3>
+        <p class="etapa__desc">Análise de universo visual, público e referências para construir uma base estratégica sólida.</p>
+      </li>
+      <li class="etapa">
+        <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><g opacity=".28"><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="30.56"/><line x1="100" y1="100" x2="100" y2="20"/><line x1="100" y1="100" x2="140" y2="30.72"/><line x1="100" y1="100" x2="169.28" y2="60"/><line x1="100" y1="100" x2="180" y2="100"/><line x1="100" y1="100" x2="169.28" y2="140"/><line x1="100" y1="100" x2="140" y2="169.28"/><line x1="100" y1="100" x2="100" y2="180"/><line x1="100" y1="100" x2="60" y2="169.28"/><line x1="100" y1="100" x2="30.72" y2="140"/><line x1="100" y1="100" x2="20" y2="100"/><line x1="100" y1="100" x2="30.72" y2="60"/><line x1="100" y1="100" x2="60" y2="30.72"/></g><path d="M100 20L107.91 70.48L140 30.72L121.61 78.39L169.28 60L129.52 92.09L180 100L129.52 107.91L169.28 140L121.61 121.61L140 169.28L107.91 129.52L100 180L92.09 129.52L60 169.28L78.39 121.61L30.72 140L70.48 107.91L20 100L70.48 92.09L30.72 60L78.39 78.39L60 30.72L92.09 70.48Z"/></svg></span>
+        <h3 class="etapa__titulo">Design e desenvolvimento</h3>
+        <p class="etapa__desc">Construção completa da experiência. Do protótipo à implementação técnica de ponta a ponta.</p>
+      </li>
+      <li class="etapa">
+        <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M100 20L107.91 70.48L140 30.72L121.61 78.39L169.28 60L129.52 92.09L180 100L129.52 107.91L169.28 140L121.61 121.61L140 169.28L107.91 129.52L100 180L92.09 129.52L60 169.28L78.39 121.61L30.72 140L70.48 107.91L20 100L70.48 92.09L30.72 60L78.39 78.39L60 30.72L92.09 70.48Z" fill="currentColor" stroke="none" class="etapa__estrela"/></svg></span>
+        <h3 class="etapa__titulo">Produto final</h3>
+        <p class="etapa__desc">Lançamento oficial da sua presença digital, com autonomia total e suporte para o pós-ar.</p>
+      </li>
+    </ol>
+  </section>
+</main>
+
+<!-- RODAPE -->
+<footer class="rodape" id="contato">
+  <!-- mesmo shader da intro, segundo contexto de WebGL -->
+  <canvas id="shader-rodape" class="rodape__shader" data-shader aria-hidden="true"></canvas>
+
+  <div class="rodape__conteudo shell">
+    <div class="rodape__topo">
+      <div class="rodape__chamada-bloco">
+        <span class="rodape__estrela" aria-hidden="true"></span>
+        <p class="rodape__chamada">Sua marca merece ser vista.<br>Vamos conversar?</p>
+      </div>
+
+    </div>
+
+    <ul class="rodape__contatos">
+      <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
+      <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
+      <li><a href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+    </ul>
+  </div>
+</footer>
+
+<!-- Desfoque progressivo na borda de baixo (ProgressiveBlur) -->
+<div class="blur-borda blur-borda--base" aria-hidden="true"></div>
+
+<script src="js/shader-fundo.js" defer></script>
+<script src="js/main.js"></script>
+</body>
+</html>

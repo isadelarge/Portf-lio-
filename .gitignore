@@ -1,0 +1,14 @@
+# Lixo de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Ferramentas locais
+.claude/
+node_modules/
+.vercel/

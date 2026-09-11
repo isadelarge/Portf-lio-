@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>projetos · delarge</title>
+<meta name="description" content="Todos os projetos de web design da delarge.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@100&family=Zalando+Sans:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="pagina-indice">
+
+<nav class="navbar navbar--fixa" aria-label="Principal">
+  <span class="brand__slot" aria-hidden="true"><span class="brand__star"></span></span>
+  <a class="brand" href="index.html"><span class="brand__name">delarge</span></a>
+  <a class="navbar__voltar" href="index.html">voltar</a>
+</nav>
+
+<main class="indice shell">
+  <h1 class="indice__titulo">projetos</h1>
+
+  <!-- Índice, e não cards: a página inicial já mostra as capas, entao aqui a
+       organizacao e outra, uma lista longa que cresce sem esforco. -->
+  <ol class="indice__lista">
+
+    <li class="linha">
+      <a class="linha__link" href="https://lumebylexy.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <span class="linha__num">01</span>
+        <span class="linha__nome">LUME by Lexy</span>
+        <span class="linha__tipo">velas artesanais · site e catálogo</span>
+        <span class="linha__ano">2026</span>
+        <span class="linha__seta" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
+          </svg>
+        </span>
+      </a>
+      <span class="linha__previa" aria-hidden="true">
+        <img src="assets/img/lumebylexy.webp" alt="" width="1746" height="900" loading="lazy" decoding="async">
+      </span>
+    </li>
+
+    <li class="linha">
+      <a class="linha__link" href="https://camila-torres-psicologa.vercel.app/" target="_blank" rel="noopener noreferrer">
+        <span class="linha__num">02</span>
+        <span class="linha__nome">Camila Torres</span>
+        <span class="linha__tipo">psicologia clínica · site institucional</span>
+        <span class="linha__ano">2026</span>
+        <span class="linha__seta" aria-hidden="true">
+          <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
+          </svg>
+        </span>
+      </a>
+      <span class="linha__previa" aria-hidden="true">
+        <img src="assets/img/camillatorres.webp" alt="" width="1736" height="882" loading="lazy" decoding="async">
+      </span>
+    </li>
+
+    <!-- TODO trocar o href e a capa quando o Mansan Gallery subir -->
+    <li class="linha linha--breve">
+      <div class="linha__link">
+        <span class="linha__num">03</span>
+        <span class="linha__nome">Mansan Gallery</span>
+        <span class="linha__tipo">arte contemporânea · concept redesign</span>
+        <span class="linha__ano">2026</span>
+        <span class="linha__breve">em breve</span>
+      </div>
+      <span class="linha__previa" aria-hidden="true">
+        <img src="assets/img/mansangallery.webp" alt="" width="1863" height="989" loading="lazy" decoding="async">
+      </span>
+    </li>
+
+  </ol>
+</main>
+
+<!-- Versao curta do rodape da home: mesmo gradiente, mesma estrela e os
+     mesmos contatos, sem a chamada grande. -->
+<footer class="rodape rodape--curto">
+  <canvas id="shader-rodape" class="rodape__shader" data-shader aria-hidden="true"></canvas>
+
+  <div class="rodape__conteudo shell">
+    <div class="rodape__topo">
+      <span class="rodape__estrela" aria-hidden="true"></span>
+
+      <ul class="rodape__contatos">
+        <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
+        <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
+        <li><a href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script src="js/shader-fundo.js" defer></script>
+<script src="js/indice.js" defer></script>
+</body>
+</html>

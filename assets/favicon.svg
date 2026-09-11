@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Mesma estrela de 12 pontas do site, com o vale interno em 0.382 do raio.
+       A cor acompanha o tema do navegador: preta na aba clara, branca na
+       escura, senao ela some numa das duas. -->
+  <style>
+    path { fill: #111111; }
+    @media (prefers-color-scheme: dark) { path { fill: #ffffff; } }
+  </style>
+  <path d="M16 1.5L17.434 10.65L23.25 3.443L19.917 12.083L28.557 8.75L21.35 14.566L30.5 16L21.35 17.434L28.557 23.25L19.917 19.917L23.25 28.557L17.434 21.35L16 30.5L14.566 21.35L8.75 28.557L12.083 19.917L3.443 23.25L10.65 17.434L1.5 16L10.65 14.566L3.443 8.75L12.083 12.083L8.75 3.443L14.566 10.65Z"/>
+</svg>
