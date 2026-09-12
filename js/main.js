@@ -258,8 +258,110 @@
       window.setTimeout(function () {
         nav.classList.add('is-assembled');
         medirNav();
+        armarDescida();
       }, 1750);
     }
+  }
+
+  /* ---- 6b. a folha branca sobe sozinha quando a intro acaba ----
+     A intro monta a barra e para. Dai em diante a pagina fica esperando um
+     gesto que a pessoa nao sabe que precisa dar: nada se move para dizer que
+     ha mais coisa abaixo. Entao ela mesma anda uma tela.
+
+     Nao ha animacao nova aqui. Uma tela de scroll ja e a folha branca subindo
+     por cima do bloco escuro, a barra prendendo no topo e o manifesto acendendo
+     letra a letra, porque as tres coisas sao dirigidas pelo scroll e nao pelo
+     relogio. Mover o scroll toca as tres de uma vez.
+
+     O destino e o topo da folha, medido na hora: nos dois caminhos do CSS, com
+     e sem scroll timeline, ele da exatamente uma tela.
+
+     O disparo nao e um relogio novo. E o silencio depois da ultima transicao
+     da barra, o que resolve sozinho a diferenca entre desktop, onde as letras
+     de "contato" ainda estao entrando, e mobile, onde a barra e so a marca e ja
+     terminou antes. Se os tempos do CSS mudarem, isto acompanha. */
+  var PAUSA = 520;       // respiro entre a barra parar e a pagina andar
+  var DESCIDA = 1150;    // o mesmo tempo da marca viajando para a esquerda
+  var jaDesceu = false;
+
+  function armarDescida() {
+    var relogio = null;
+
+    function adiar() {
+      window.clearTimeout(relogio);
+      relogio = window.setTimeout(disparar, PAUSA);
+    }
+
+    function disparar() {
+      nav.removeEventListener('transitionend', adiar);
+      descer();
+    }
+
+    nav.addEventListener('transitionend', adiar);
+    adiar();
+  }
+
+  function descer() {
+    var folha = document.querySelector('.page');
+
+    if (jaDesceu || !folha) return;
+    jaDesceu = true;
+
+    /* Cada um destes quer dizer que a descida nao cabe mais: a pessoa pediu
+       uma secao pela URL, ja rolou por conta propria, ou nem esta olhando a
+       aba, e voltar para ela daqui a cinco minutos com a pagina andando
+       sozinha seria um susto. */
+    if (window.location.hash) return;
+    if (window.scrollY > 4) return;
+    if (document.visibilityState !== 'visible') return;
+
+    var alvo = folha.offsetTop;
+    var partida = window.scrollY;
+    var distancia = alvo - partida;
+    if (distancia <= 0) return;
+
+    var raiz = document.documentElement;
+    var suaveAntes = raiz.style.scrollBehavior;
+    /* o scroll-behavior: smooth da folha transformaria cada quadro desta
+       animacao em outra animacao, concorrendo com ela */
+    raiz.style.scrollBehavior = 'auto';
+
+    var gestos = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+    var cancelado = false;
+    var inicio = null;
+
+    function soltar() {
+      raiz.style.scrollBehavior = suaveAntes;
+      gestos.forEach(function (g) { window.removeEventListener(g, cancelar); });
+    }
+
+    function cancelar() {
+      cancelado = true;
+      soltar();
+    }
+
+    gestos.forEach(function (g) {
+      window.addEventListener(g, cancelar, { passive: true });
+    });
+
+    /* aproximacao da cubic-bezier(.16,1,.3,1) que o site usa em tudo: quase
+       toda a distancia no comeco, e uma chegada longa e macia */
+    function curva(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function quadro(agora) {
+      if (cancelado) return;
+      if (inicio === null) inicio = agora;
+
+      var t = Math.min(1, (agora - inicio) / DESCIDA);
+      window.scrollTo(0, partida + distancia * curva(t));
+
+      if (t < 1) window.requestAnimationFrame(quadro);
+      else soltar();
+    }
+
+    window.requestAnimationFrame(quadro);
   }
 
   /* ---- 7. revelacao ao cruzar a margem inferior ----
