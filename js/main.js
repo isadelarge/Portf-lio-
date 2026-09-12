@@ -96,6 +96,21 @@
   var gatilhoContato = document.getElementById('contato-toggle');
   var toggle = document.getElementById('nav-toggle');
 
+  /* O estado e o rotulo do hamburguer saem da mesma conta, num lugar so. Os
+     dois textos vem do HTML, e nao daqui, porque a versao em ingles da pagina
+     e gerada trocando atributos do proprio HTML. */
+  function rotularToggle() {
+    if (!toggle) return;
+
+    var menuAberto = painelMenu !== null && painelMenu.getAttribute('aria-hidden') === 'false';
+    toggle.setAttribute('aria-expanded', menuAberto ? 'true' : 'false');
+    toggle.setAttribute('aria-label', menuAberto
+      ? (toggle.getAttribute('data-label-fechar') || 'Fechar menu')
+      : (toggle.getAttribute('data-label-abrir') || 'Abrir menu'));
+  }
+
+  rotularToggle();
+
   function abrir(alvo, aberto) {
     if (!alvo) return;
     alvo.setAttribute('aria-hidden', aberto ? 'false' : 'true');
@@ -115,11 +130,7 @@
       gatilhoContato.setAttribute('aria-expanded',
         painelContato && painelContato.getAttribute('aria-hidden') === 'false' ? 'true' : 'false');
     }
-    if (toggle) {
-      var menuAberto = painelMenu && painelMenu.getAttribute('aria-hidden') === 'false';
-      toggle.setAttribute('aria-expanded', menuAberto ? 'true' : 'false');
-      toggle.setAttribute('aria-label', menuAberto ? 'Fechar menu' : 'Abrir menu');
-    }
+    rotularToggle();
 
     /* o gradiente do pe da lamina para de desenhar enquanto ela esta fechada,
        e nao ha scroll nem resize para religar o loop quando ela abre */

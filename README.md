@@ -7,14 +7,42 @@ Site estático, sem build e sem dependências: HTML, CSS e JavaScript escritos �
 ## Estrutura
 
 ```
-index.html          página principal
+index.html          página principal, em português
 projetos.html       índice de todos os projetos
+en/                 as mesmas duas páginas em inglês, GERADAS
 css/style.css       folha única
 js/main.js          navbar, painéis, revelação no scroll, leitura por letra
 js/shader-fundo.js  gradiente animado em WebGL
 js/indice.js        prévia de capa no hover do índice
+js/idioma.js        grava a escolha de idioma num cookie
+tools/en.json       a tradução, chave por chave
+tools/gerar-en.js   monta /en a partir do português
 assets/             imagens, SVGs e ícones
 ```
+
+## Os dois idiomas
+
+O português é a fonte. Os arquivos em `en/` são **gerados** e nunca editados à
+mão: o que for escrito lá some na próxima geração.
+
+Para mudar um texto em português, edite o `index.html` como sempre. Para mudar a
+tradução dele, edite `tools/en.json`. Depois:
+
+```bash
+node tools/gerar-en.js
+```
+
+O casamento entre os dois lados vive em atributos do próprio HTML:
+`data-i18n` troca o texto de dentro do elemento, `data-i18n-html` troca o
+conteúdo com as tags, e `data-i18n-attr` troca atributos como `alt` e
+`aria-label`. Se uma chave faltar no `en.json`, o gerador para e diz qual.
+
+Quem chega na raiz é mandado para `/en/` quando o idioma preferido do navegador
+não é português. A regra está no `vercel.json`, roda antes da página existir e
+não custa invocação nenhuma. Ela não dispara quando não há cabeçalho
+`Accept-Language`, que é o caso do Googlebot: assim a home em português continua
+sendo a que o Google indexa. O seletor no rodapé grava um cookie, e o cookie
+desliga a escolha automática, porque escolha explícita ganha de palpite.
 
 ## Rodar localmente
 
