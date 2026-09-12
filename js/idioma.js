@@ -1,18 +1,6 @@
-/* delarge — memoria da escolha de idioma
-
-   As duas versoes do site sao arquivos de verdade: a raiz em portugues e /en
-   em ingles. Quem troca de idioma esta seguindo um link comum, entao nao ha
-   nada para traduzir em tempo de execucao. Este arquivo faz uma coisa so.
-
-   Quem chega na raiz e mandado para /en quando o navegador nao pede portugues.
-   Essa regra vive no vercel.json, roda antes da pagina existir e nao custa
-   nada. Mas ela precisa de um jeito de sair do caminho: se a pessoa clicou em
-   "português" de dentro do /en, ou em "english" estando na raiz, foi uma
-   escolha explicita, e escolha explicita ganha de palpite automatico.
-
-   O cookie e esse recado. O vercel.json so redireciona quando ele nao existe,
-   e passa a respeitar o valor dele depois disso. Um ano de validade porque a
-   escolha de idioma de uma pessoa nao muda de semana em semana. */
+/* Guarda a escolha de idioma num cookie. A regra do vercel.json so manda a
+   raiz para /en quando este cookie nao existe, e respeita o valor dele depois
+   disso: escolha explicita ganha de palpite automatico. */
 
 (function () {
   'use strict';

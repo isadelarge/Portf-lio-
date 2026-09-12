@@ -66,12 +66,10 @@ a{ color: inherit; text-decoration: none; }
   padding-inline: var(--gutter);
 }
 
-/* ---------------------------------------------------------
-   INTRO E NAVBAR
-   Uma navbar so. Ela nasce no centro do bloco escuro, sobe junto
-   com a pagina ate encostar no topo, prende ali e, quando o bloco
-   escuro passa, so troca de cor. Nao existe segunda navbar.
-   --------------------------------------------------------- */
+/* ---- intro e navbar ----
+   Uma navbar so. Ela nasce no centro do bloco escuro, sobe junto com a pagina
+   ate encostar no topo, prende ali e, quando o bloco escuro passa, so troca de
+   cor. Nao existe segunda navbar. */
 
 /* Fundo da intro. Fica FIXO, como na raggededge: ele nao rola junto, e o
    conteudo branco desliza por cima dele. E dai que vem a transicao suave,
@@ -462,19 +460,10 @@ a{ color: inherit; text-decoration: none; }
 .navbar.is-assembled .navbar__links li:nth-child(3){ --atraso: 1.11s; }
 .navbar.is-assembled .navbar__contact{ --atraso: 1.19s; }
 
-/* ---------------------------------------------------------
-   DESFOQUE PROGRESSIVO NA BORDA DE BAIXO
-   Traduzido do componente ProgressiveBlur. A camada e fixa,
-   aplica backdrop-filter e usa uma mascara para o desfoque
-   perder forca em direcao ao centro da tela.
-
-   O componente original tambem pinta um degrade ate a cor de
-   fundo, o que assume uma cor unica. Esta pagina tem duas, o
-   bloco escuro e a secao branca, entao o degrade ficaria como
-   uma neblina clara sobre o escuro. Ficou so o desfoque, que
-   funciona sobre as duas e ainda ajuda a navbar: sem fundo
-   proprio, ela agora le sobre conteudo amaciado.
-   --------------------------------------------------------- */
+/* ---- desfoque progressivo na borda de baixo ----
+   Do componente ProgressiveBlur, sem o degrade ate a cor de fundo que ele
+   tambem pinta: aquilo assume uma cor unica, e esta pagina tem duas. Sobre o
+   bloco escuro o degrade claro viraria neblina. Ficou so o desfoque. */
 
 .blur-borda{
   position: fixed;
@@ -502,9 +491,7 @@ a{ color: inherit; text-decoration: none; }
   mask-image: linear-gradient(to top, #000 50%, transparent);
 }
 
-/* ---------------------------------------------------------
-   MANIFESTO
-   --------------------------------------------------------- */
+/* ---- manifesto ---- */
 
 .manifesto{
   padding-top: var(--space-block);
@@ -566,9 +553,7 @@ a{ color: inherit; text-decoration: none; }
   animation: star-spin 22s linear infinite;
 }
 
-/* ---------------------------------------------------------
-   DIVISOR DE SECAO
-   --------------------------------------------------------- */
+/* ---- divisor de secao ---- */
 
 /* Titulo de secao: o rotulo abre a linha, a esquerda, e o filete corre
    ate a borda. O filete entra deslizando da esquerda para a direita quando
@@ -603,13 +588,10 @@ a{ color: inherit; text-decoration: none; }
 
 .rule.is-visible .rule__line{ transform: scaleX(1); }
 
-/* ---------------------------------------------------------
-   PROJETOS
-   Mesma gramatica de servicos e processo: filete no topo,
-   coluna de 64px com o numero, titulo grande e uma coluna
-   secundaria. Aqui a coluna secundaria e a capa, e ela pesa
-   mais que nas outras secoes por ser o conteudo principal.
-   --------------------------------------------------------- */
+/* ---- projetos ----
+   Mesma gramatica de servicos e processo: filete no topo, titulo grande e uma
+   coluna secundaria. Aqui a secundaria e a capa, e pesa mais que nas outras
+   secoes por ser o conteudo principal. */
 
 .projects{
   padding-top: clamp(28px, 3.5vw, 56px);
@@ -779,9 +761,7 @@ a{ color: inherit; text-decoration: none; }
   translate: 0 0;
 }
 
-/* ---------------------------------------------------------
-   REVELACAO NO SCROLL
-   --------------------------------------------------------- */
+/* ---- revelacao no scroll ---- */
 
 .reveal{
   opacity: 0;

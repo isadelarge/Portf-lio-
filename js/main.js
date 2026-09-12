@@ -12,7 +12,7 @@
      inteira e legivel, so sem animacao. */
   root.classList.add('js');
 
-  /* ---- 0. largura real da viewport, sem a barra de rolagem ---- */
+  /* ---- 1. largura real da viewport, sem a barra de rolagem ---- */
   function setViewportWidth() {
     root.style.setProperty('--vw', root.clientWidth + 'px');
   }
@@ -29,7 +29,7 @@
 
   var nav = document.getElementById('nav');
 
-  /* ---- 0b. quebra o texto da navbar em letras ----
+  /* ---- 2. quebra o texto da navbar em letras ----
      Traduzido do Blur Reveal de @tom_ui no 21st.dev. La cada caractere e um
      motion.span com variants; aqui vira um <span> com indice, e o CSS cuida
      do resto. Os numeros sao os do componente: blur 12px, y 10px, duracao
@@ -71,7 +71,7 @@
     nav.querySelectorAll('.mask > span').forEach(quebrarEmLetras);
   }
 
-  /* ---- 1a. altura real da navbar ----
+  /* ---- 3. altura real da navbar ----
      Os dois espacadores da intro valem cada um metade do que sobra dos
      100svh depois de descontar a navbar, entao a navbar precisa nascer
      exatamente no centro do bloco escuro. */
@@ -82,7 +82,7 @@
   medirNav();
   window.addEventListener('resize', medirNav);
 
-  /* ---- 1a-bis. paineis laterais ----
+  /* ---- 4. paineis laterais ----
      Sao dois, o mesmo componente com conteudo diferente: contato, que o botao
      "contato" da barra abre em qualquer largura, e navegacao, que o hamburguer
      abre so no mobile, onde os links nao cabem na barra.
@@ -196,7 +196,7 @@
     if (root.clientWidth > 860 && estaAberto(painelMenu)) abrir(painelMenu, false);
   });
 
-  /* ---- 1a-ter. a navbar sabe quando saiu da intro ----
+  /* ---- 5. a navbar sabe quando saiu da intro ----
      No mobile e isso que troca o bloco centralizado pela barra com menu.
      O corte e o mesmo de antes: a base do bloco escuro alcancando a base
      da navbar. */
@@ -244,7 +244,7 @@
   window.addEventListener('scroll', aoRolar, { passive: true });
   window.addEventListener('resize', aoRolar);
 
-  /* ---- 1b. intro ----
+  /* ---- 6. intro ----
      260ms : marca, estrela e assinatura sobem da mascara, perto do centro
      1750ms: a linha se abre para as pontas e os links entram escalonados */
   if (nav) {
@@ -262,7 +262,7 @@
     }
   }
 
-  /* ---- 2. revelacao ao cruzar a margem inferior ----
+  /* ---- 7. revelacao ao cruzar a margem inferior ----
      A linha de gatilho fica 100px acima da borda de baixo da viewport, que e
      onde a referencia resolve o rotulo do projeto de cinza claro para preto. */
   var MARGEM_INFERIOR = 100;
@@ -342,7 +342,7 @@
   window.addEventListener('resize', agendar);
   resolver();
 
-  /* ---- 2b. manifesto: leitura conforme o scroll ----
+  /* ---- 8. manifesto: leitura conforme o scroll ----
      Traduzido do Text Scroll Read de @youcefbnm, mas com outro mecanismo.
      O componente usa um degrade com background-clip: text, e um degrade e
      uma faixa vertical unica, entao ele varre as tres linhas ao mesmo tempo
@@ -438,7 +438,7 @@
   window.addEventListener('scroll', agendarLeitura, { passive: true });
   window.addEventListener('resize', agendarLeitura);
 
-  /* ---- 3. distorcao das capas conforme a velocidade do scroll ----
+  /* ---- 9. distorcao das capas conforme a velocidade do scroll ----
      A capa se comporta como uma folha presa pelas pontas: a borda de tras
      fica para tras e vira um arco. Rolando para baixo curva a borda de
      baixo, rolando para cima curva a de cima. Parou, volta ao reto.
