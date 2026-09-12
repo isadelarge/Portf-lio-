@@ -493,11 +493,17 @@ a{ color: inherit; text-decoration: none; }
 
 /* ---- manifesto ---- */
 
+/* O respiro normal da pagina, mas nunca menos que a altura da barra: ela e
+   fixa e fica POR CIMA daqui. No desktop o clamp ja dava 120px contra 72px de
+   barra e sobrava folga; no telefone ele desce para o minimo de 56px contra
+   67px de barra, e as primeiras letras do manifesto ficavam cortadas. O max()
+   so entra em acao nessa ponta: no desktop o valor nao muda. */
 .manifesto{
-  padding-top: var(--space-block);
+  padding-top: max(var(--space-block), calc(var(--nav-h) + 24px));
 }
 
 /* a navbar fica presa no topo, entao os alvos de ancora precisam de folga */
+#manifesto,
 #sobre,
 #projetos,
 #servicos,
