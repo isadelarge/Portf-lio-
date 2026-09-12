@@ -247,7 +247,13 @@
   <section class="sobre shell" aria-label="About">
     <div class="sobre__retrato">
       <!-- Troque o arquivo mantendo o nome retrato.jpg e nada mais precisa mudar -->
-      <img class="sobre__foto" src="/assets/img/retrato.jpg"
+      <!-- Duas medidas: a maior so vai para tela retina de desktop. Um
+           telefone, e um desktop sem retina, baixam a de 700 e economizam
+           tres quartos do peso da pagina. -->
+      <img class="sobre__foto"
+           src="/assets/img/retrato-menor.webp"
+           srcset="/assets/img/retrato-menor.webp 700w, /assets/img/retrato.webp 1206w"
+           sizes="(max-width: 860px) 92vw, 40vw"
            alt="Portrait of Isabela" width="1206" height="1744"
            loading="lazy" decoding="async">
     </div>

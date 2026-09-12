@@ -119,13 +119,33 @@ function trocarAtributos(html) {
    tudo que e compartilhado passa a ser absoluto, e so os links entre paginas
    e que ganham o prefixo do idioma. */
 function ajustarCaminhos(html) {
-  return html.replace(/\b(src|href)="([^"]+)"/g, function (inteiro, attr, valor) {
-    if (/^(https?:|mailto:|tel:|data:|#|\/)/.test(valor)) return inteiro;
-    if (/^(assets|css|js)\//.test(valor)) return attr + '="/' + valor + '"';
-    if (valor === 'index.html') return attr + '="/en/"';
-    if (/\.html$/.test(valor)) return attr + '="/en/' + valor + '"';
-    return inteiro;
-  }).replace(/\bhref="\/"/g, 'href="/en/"');
+  function absoluto(valor) {
+    if (/^(https?:|mailto:|tel:|data:|#|\/)/.test(valor)) return null;
+    if (/^(assets|css|js)\//.test(valor)) return '/' + valor;
+    if (valor === 'index.html') return '/en/';
+    if (/\.html$/.test(valor)) return '/en/' + valor;
+    return null;
+  }
+
+  return html
+    .replace(/\b(src|href)="([^"]+)"/g, function (inteiro, attr, valor) {
+      var novo = absoluto(valor);
+      return novo === null ? inteiro : attr + '="' + novo + '"';
+    })
+    /* O srcset nao e um caminho so: e uma lista de "caminho descritor",
+       separada por virgula. Sem tratar cada item, a lista continuava relativa
+       e resolvia para /en/assets/..., que nao existe. E como o srcset ganha do
+       src quando casa, a foto sumia da versao em ingles. */
+    .replace(/\bsrcset="([^"]+)"/g, function (inteiro, lista) {
+      var itens = lista.split(',').map(function (item) {
+        var partes = item.trim().split(/\s+/);
+        var novo = absoluto(partes[0]);
+        if (novo !== null) partes[0] = novo;
+        return partes.join(' ');
+      });
+      return 'srcset="' + itens.join(', ') + '"';
+    })
+    .replace(/\bhref="\/"/g, 'href="/en/"');
 }
 
 /* ---- 5. cabecalho ---- */

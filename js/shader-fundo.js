@@ -532,12 +532,32 @@ void main() {
      o mesmo quadro: a intro, a faixa da navbar e o rodape. A intro e o rodape
      pausam sozinhos quando saem da tela, pelo IntersectionObserver la de cima.
      A faixa da navbar nunca sai, e por isso ela pede o recorte. */
+  var adiados = [];
+
   document.querySelectorAll('canvas[data-shader]').forEach(function (canvas) {
+    /* Os gradientes dos paineis nascem so quando o painel abre pela primeira
+       vez. Cada um custa um contexto de WebGL e um buffer do tamanho da
+       viewport, e no telefone isso era 2,4 Mpx de GPU reservados em toda
+       visita para uma gaveta que a maioria das pessoas nunca abre. Depois de
+       aberto ele segue vivo: quem abriu uma vez costuma abrir de novo. */
+    if (canvas.hasAttribute('data-shader-pausa')) {
+      adiados.push(canvas);
+      return;
+    }
     // sem WebGL o canvas some e fica a cor solida do CSS
     if (!iniciar(canvas)) canvas.remove();
   });
 
   window.acordarShaders = function () {
+    /* So o painel que esta abrindo agora: acordar os dois criaria o contexto
+       do outro a toa, que e justamente o que este adiamento evita. */
+    adiados = adiados.filter(function (canvas) {
+      var painel = document.querySelector(canvas.getAttribute('data-shader-pausa'));
+      if (painel && painel.getAttribute('aria-hidden') === 'true') return true;
+      if (!iniciar(canvas)) canvas.remove();
+      return false;
+    });
+
     acordadores.forEach(function (pedir) { pedir(); });
   };
 })();
