@@ -280,13 +280,20 @@
      da barra, o que resolve sozinho a diferenca entre desktop, onde as letras
      de "contato" ainda estao entrando, e mobile, onde a barra e so a marca e ja
      terminou antes. Se os tempos do CSS mudarem, isto acompanha. */
-  var PAUSA = 520;       // respiro entre a barra parar e a pagina andar
-  var DESCIDA = 1150;    // o mesmo tempo da marca viajando para a esquerda
+  var PAUSA = 1020;      // respiro entre a barra parar e a pagina andar
+  var DESCIDA = 1600;    // a viagem de uma tela, devagar o bastante para ler
   var jaDesceu = false;
 
   function armarDescida() {
     var relogio = null;
 
+    /* Os dois, e nao so transitionend: a estrela da marca troca de lugar por
+       @keyframes, e uma animacao nao dispara transitionend. Sem animationend
+       aqui a conta terminava antes dela, e a pagina comecava a andar com a
+       barra ainda se montando.
+
+       A estrela que gira em looping nao atrapalha: animacao infinita nunca
+       chega ao fim, entao nunca empurra o relogio. */
     function adiar() {
       window.clearTimeout(relogio);
       relogio = window.setTimeout(disparar, PAUSA);
@@ -294,10 +301,12 @@
 
     function disparar() {
       nav.removeEventListener('transitionend', adiar);
+      nav.removeEventListener('animationend', adiar);
       descer();
     }
 
     nav.addEventListener('transitionend', adiar);
+    nav.addEventListener('animationend', adiar);
     adiar();
   }
 
@@ -344,10 +353,16 @@
       window.addEventListener(g, cancelar, { passive: true });
     });
 
-    /* aproximacao da cubic-bezier(.16,1,.3,1) que o site usa em tudo: quase
-       toda a distancia no comeco, e uma chegada longa e macia */
+    /* Aceleracao nas duas pontas, e nao a curva de saida que o site usa no
+       resto. Sao dois trabalhos diferentes: uma revelacao quer chegar rapido e
+       assentar, entao comeca no talo e desacelera; uma viagem de uma tela
+       inteira com esse mesmo comeco da um tranco, porque a pagina salta do
+       repouso para a velocidade maxima num quadro. Aqui ela sai devagar, ganha
+       corpo no meio e encosta sem batida. */
     function curva(t) {
-      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      return t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
     function quadro(agora) {
