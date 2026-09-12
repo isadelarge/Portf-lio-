@@ -6,6 +6,27 @@
       "has": [{ "type": "host", "value": "www.delargedesign.com.br" }],
       "destination": "https://delargedesign.com.br/$1",
       "permanent": true
+    },
+
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "idioma", "value": "en" }],
+      "destination": "/en/",
+      "permanent": false
+    },
+
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": { "re": "^([a-oq-zA-OQ-Z]|[pP][^tT]).*" }
+        }
+      ],
+      "missing": [{ "type": "cookie", "key": "idioma" }],
+      "destination": "/en/",
+      "permanent": false
     }
   ],
   "headers": [
@@ -30,6 +51,10 @@
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "X-DNS-Prefetch-Control", "value": "on" }
       ]
+    },
+    {
+      "source": "/",
+      "headers": [{ "key": "Vary", "value": "Accept-Language, Cookie" }]
     },
     {
       "source": "/assets/(.*)",

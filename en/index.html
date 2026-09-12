@@ -1,11 +1,14 @@
 <!doctype html>
-<html lang="pt-BR">
+<!-- GERADO por tools/gerar-en.js. Nao edite a mao:
+     mude o portugues no arquivo da raiz ou a traducao em tools/en.json
+     e rode  node tools/gerar-en.js  de novo. -->
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title data-i18n="meta.title.home">delarge · ui/ux · web designer</title>
-<meta name="description" data-i18n-attr="content:meta.desc.home" content="Web designer independente. Construo sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding.">
-<link rel="canonical" href="https://delargedesign.com.br/">
+<title>delarge · ui/ux · web designer</title>
+<meta name="description" content="Independent web designer. I build tailor-made websites for people and brands, combining UX/UI and vibe-coding.">
+<link rel="canonical" href="https://delargedesign.com.br/en/">
 <link rel="alternate" hreflang="pt-BR" href="https://delargedesign.com.br/">
 <link rel="alternate" hreflang="en" href="https://delargedesign.com.br/en/">
 <link rel="alternate" hreflang="x-default" href="https://delargedesign.com.br/">
@@ -15,26 +18,26 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="delarge">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:url" content="https://delargedesign.com.br/">
-<meta property="og:title" data-i18n-attr="content:meta.title.home" content="delarge · ui/ux · web designer">
-<meta property="og:description" data-i18n-attr="content:meta.desc.home" content="Web designer independente. Construo sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding.">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://delargedesign.com.br/en/">
+<meta property="og:title" content="delarge · ui/ux · web designer">
+<meta property="og:description" content="Independent web designer. I build tailor-made websites for people and brands, combining UX/UI and vibe-coding.">
 <meta property="og:image" content="https://delargedesign.com.br/assets/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" data-i18n-attr="content:og.alt" content="A estrela da delarge sobre o gradiente do site">
+<meta property="og:image:alt" content="The delarge star over the site gradient">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" data-i18n-attr="content:meta.title.home" content="delarge · ui/ux · web designer">
-<meta name="twitter:description" data-i18n-attr="content:meta.desc.home" content="Web designer independente. Construo sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding.">
+<meta name="twitter:title" content="delarge · ui/ux · web designer">
+<meta name="twitter:description" content="Independent web designer. I build tailor-made websites for people and brands, combining UX/UI and vibe-coding.">
 <meta name="twitter:image" content="https://delargedesign.com.br/assets/og.jpg">
 
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
@@ -57,7 +60,7 @@
      O mix-blend-mode fica no <nav>, e nao nos filhos: position sticky cria
      contexto de empilhamento, e blend em filho mescla so dentro dele, contra
      nada. Por isso o painel do menu mora fora desta tag. -->
-<nav class="navbar" id="nav" aria-label="Principal" data-i18n-attr="aria-label:nav.principal">
+<nav class="navbar" id="nav" aria-label="Main">
   <!-- A faixa da barra e uma janela para o mesmo campo do shader da intro: um
        canvas de 100svh colado no topo da viewport, recortado pela altura da
        barra. Nao da para reaproveitar o canvas da intro, que fica embaixo da
@@ -71,17 +74,16 @@
   <span class="brand__slot" aria-hidden="true"><span class="brand__star"></span></span>
   <a class="brand" href="#manifesto"><span class="brand__name mask"><span>delarge</span></span></a>
   <ul class="navbar__links">
-    <li><a href="#projetos"><span class="mask"><span data-i18n="nav.projetos">projetos</span></span></a></li>
-    <li><a href="#sobre"><span class="mask"><span data-i18n="nav.sobre">sobre</span></span></a></li>
-    <li><a href="#servicos"><span class="mask"><span data-i18n="nav.servicos">serviços</span></span></a></li>
+    <li><a href="#projetos"><span class="mask"><span>projects</span></span></a></li>
+    <li><a href="#sobre"><span class="mask"><span>about</span></span></a></li>
+    <li><a href="#servicos"><span class="mask"><span>services</span></span></a></li>
   </ul>
   <p class="navbar__tagline mask"><span>ui/ux · web designer</span></p>
   <button class="navbar__contact" id="contato-toggle" type="button"
-          aria-controls="contato-menu" aria-expanded="false"><span class="mask"><span data-i18n="nav.contato">contato</span></span></button>
+          aria-controls="contato-menu" aria-expanded="false"><span class="mask"><span>contact</span></span></button>
   <button class="nav-toggle" id="nav-toggle" type="button"
           aria-controls="menu" aria-expanded="false" aria-label="Abrir menu"
-          data-label-abrir="Abrir menu" data-label-fechar="Fechar menu"
-          data-i18n-attr="data-label-abrir:nav.abrir;data-label-fechar:nav.fechar">
+          data-label-abrir="Open menu" data-label-fechar="Close menu">
     <span></span><span></span>
   </button>
 
@@ -99,8 +101,7 @@
   <div class="painel__lamina">
     <canvas class="painel__shader" data-shader data-shader-pausa="#contato-menu" aria-hidden="true"></canvas>
 
-    <button class="painel__fechar" type="button" aria-label="Fechar contato"
-            data-i18n-attr="aria-label:painel.fechar">
+    <button class="painel__fechar" type="button" aria-label="Close contact">
       <svg viewBox="0 0 16 16" width="16" height="16" fill="none"
            stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/>
@@ -109,18 +110,18 @@
 
     <div class="painel__corpo">
       <span class="painel__estrela" aria-hidden="true"></span>
-      <p class="painel__frase" data-i18n="painel.frase">Me conte mais sobre a sua ideia.</p>
+      <p class="painel__frase">Tell me more about your idea.</p>
 
       <div class="painel__bloco">
-        <h2 class="painel__rotulo" data-i18n="label.contato">contato</h2>
+        <h2 class="painel__rotulo">contact</h2>
         <ul class="painel__lista">
-          <li><a data-i18n-attr="href:wa" href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+          <li><a href="https://wa.me/5543936182694?text=Hi%2C%20Isabela%21%20I%20came%20from%20your%20site%20and%20I%20am%20interested%20in%20building%20a%20project%20with%20you." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
           <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
         </ul>
       </div>
 
       <div class="painel__bloco">
-        <h2 class="painel__rotulo" data-i18n="label.redes">redes</h2>
+        <h2 class="painel__rotulo">social</h2>
         <ul class="painel__lista">
           <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
           <li><a href="https://www.linkedin.com/in/isabela-fernandes-40247a234/" target="_blank" rel="noopener noreferrer">linkedin</a></li>
@@ -142,12 +143,12 @@
     <div class="painel__corpo">
       <span class="painel__estrela" aria-hidden="true"></span>
 
-      <nav aria-label="Seções" data-i18n-attr="aria-label:nav.secoes">
+      <nav aria-label="Sections">
         <ul class="painel__links">
-          <li><a href="#projetos" data-i18n="nav.projetos">projetos</a></li>
-          <li><a href="#sobre" data-i18n="nav.sobre">sobre</a></li>
-          <li><a href="#servicos" data-i18n="nav.servicos">serviços</a></li>
-          <li><a href="#processo" data-i18n="nav.processo">processo</a></li>
+          <li><a href="#projetos">projects</a></li>
+          <li><a href="#sobre">about</a></li>
+          <li><a href="#servicos">services</a></li>
+          <li><a href="#processo">process</a></li>
         </ul>
       </nav>
 
@@ -162,30 +163,26 @@
 
   <!-- SECAO 1 — Manifesto — Figma 1:25, 1:20, 1:26 -->
   <section class="manifesto shell" id="manifesto">
-    <h1 class="manifesto__text leitura" data-i18n-html="manifesto" data-node-id="1:25">
-      Web designer <span class="manifesto__keep">independente. <span class="manifesto__star" aria-hidden="true"></span></span> Construo
-      sites sob medida para pessoas e marcas, combinando UX/UI e vibe-coding para dar vida a sites
-      <strong>modernos, funcionais e com personalidade.</strong>
-    </h1>
+    <h1 class="manifesto__text leitura" data-node-id="1:25">Independent web <span class="manifesto__keep">designer. <span class="manifesto__star" aria-hidden="true"></span></span> I build tailor-made sites for people and brands, combining UX/UI and vibe-coding to bring to life sites that are <strong>modern, functional and full of personality.</strong></h1>
   </section>
 
   <!-- SECAO 2 — Projetos — Figma 1:27 … 1:73 -->
   <div class="rule shell" id="projetos" data-node-id="1:27">
-    <span class="rule__label" data-i18n="nav.projetos">projetos</span>
-    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+    <span class="rule__label">projects</span>
+    <img class="rule__line" src="/assets/svg/line-1.svg" alt="" width="1331" height="1">
   </div>
 
-  <section class="projects shell" aria-label="Projetos" data-i18n-attr="aria-label:aria.projetos">
+  <section class="projects shell" aria-label="Projects">
 
     <!-- TODO trocar o href e a capa do Mansan quando ele subir -->
     <article class="project" data-node-id="1:29">
       <a class="project__link" href="https://lumebylexy.vercel.app/" target="_blank" rel="noopener noreferrer">
         <div class="project__info">
           <h3 class="project__name">LUME by Lexy</h3>
-          <p class="project__kind" data-i18n="proj.lume.tipo">velas artesanais · site e catálogo</p>
-          <p class="project__desc" data-i18n="proj.lume.desc">A marca do atelier já existia, o site não. Construí do zero e integrei cada aroma à encomenda direta no WhatsApp.</p>
+          <p class="project__kind">handmade candles · site and catalog</p>
+          <p class="project__desc">The atelier already had a brand, but no site. I built one from scratch and wired every scent straight into a WhatsApp order.</p>
           <span class="project__abrir">
-            <span class="project__abrir-texto" data-i18n="proj.ver">visualizar</span>
+            <span class="project__abrir-texto">view</span>
             <svg class="project__abrir-seta" viewBox="0 0 16 16" width="13" height="13" fill="none"
                  stroke="currentColor" stroke-width="1.6" aria-hidden="true">
               <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
@@ -194,7 +191,7 @@
         </div>
 
         <div class="project__media">
-          <img class="project__shot" src="assets/img/lumebylexy.webp" alt="Capa do projeto LUME by Lexy" data-i18n-attr="alt:proj.lume.alt" width="1746" height="900" loading="lazy" decoding="async">
+          <img class="project__shot" src="/assets/img/lumebylexy.webp" alt="Cover of the LUME by Lexy project" width="1746" height="900" loading="lazy" decoding="async">
         </div>
       </a>
     </article>
@@ -203,10 +200,10 @@
       <a class="project__link" href="https://camila-torres-psicologa.vercel.app/" target="_blank" rel="noopener noreferrer">
         <div class="project__info">
           <h3 class="project__name">Camila Torres</h3>
-          <p class="project__kind" data-i18n="proj.camila.tipo">psicologia clínica · site institucional</p>
-          <p class="project__desc" data-i18n="proj.camila.desc">O primeiro contato de quem procura terapia. Do acolhimento ao agendamento, defini tom, paleta e hierarquia pensando no paciente.</p>
+          <p class="project__kind">clinical psychology · practice site</p>
+          <p class="project__desc">The first contact for someone looking for therapy. From the welcome to the booking, I set tone, palette and hierarchy around the patient.</p>
           <span class="project__abrir">
-            <span class="project__abrir-texto" data-i18n="proj.ver">visualizar</span>
+            <span class="project__abrir-texto">view</span>
             <svg class="project__abrir-seta" viewBox="0 0 16 16" width="13" height="13" fill="none"
                  stroke="currentColor" stroke-width="1.6" aria-hidden="true">
               <path d="M4.5 11.5 11.5 4.5M6 4.5h5.5V10"/>
@@ -215,7 +212,7 @@
         </div>
 
         <div class="project__media">
-          <img class="project__shot" src="assets/img/camillatorres.webp" alt="Capa do projeto Camila Torres" data-i18n-attr="alt:proj.camila.alt" width="1736" height="882" loading="lazy" decoding="async">
+          <img class="project__shot" src="/assets/img/camillatorres.webp" alt="Cover of the Camila Torres project" width="1736" height="882" loading="lazy" decoding="async">
         </div>
       </a>
     </article>
@@ -224,34 +221,34 @@
       <div class="project__link project__link--breve">
         <div class="project__info">
           <h3 class="project__name">Mansan Gallery</h3>
-          <p class="project__kind" data-i18n="proj.mansan.tipo">arte contemporânea · concept redesign</p>
-          <p class="project__desc" data-i18n="proj.mansan.desc">Uma galeria reduzida a espaço, luz e obra. Desenhei identidade e navegação em tela cheia para a obra chegar antes do texto.</p>
-          <span class="project__breve" data-i18n="proj.breve">em breve</span>
+          <p class="project__kind">contemporary art · concept redesign</p>
+          <p class="project__desc">A gallery reduced to space, light and artwork. I designed the identity and a full-screen navigation so the work lands before the text.</p>
+          <span class="project__breve">coming soon</span>
         </div>
 
         <div class="project__media">
-          <img class="project__shot" src="assets/img/mansangallery.webp" alt="Capa do projeto Mansan Gallery" data-i18n-attr="alt:proj.mansan.alt" width="1863" height="989" loading="lazy" decoding="async">
+          <img class="project__shot" src="/assets/img/mansangallery.webp" alt="Cover of the Mansan Gallery project" width="1863" height="989" loading="lazy" decoding="async">
         </div>
       </div>
     </article>
 
-    <a class="cta projects__todos" href="projetos.html">
+    <a class="cta projects__todos" href="/en/projetos.html">
       <span class="cta__estrela" aria-hidden="true"></span>
-      <span data-i18n="proj.todos">ver todos os projetos</span>
+      <span>see all projects</span>
     </a>
   </section>
 
   <!-- SECAO 3 — Sobre -->
   <div class="rule shell" id="sobre">
-    <span class="rule__label" data-i18n="nav.sobre">sobre</span>
-    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+    <span class="rule__label">about</span>
+    <img class="rule__line" src="/assets/svg/line-1.svg" alt="" width="1331" height="1">
   </div>
 
-  <section class="sobre shell" aria-label="Sobre" data-i18n-attr="aria-label:aria.sobre">
+  <section class="sobre shell" aria-label="About">
     <div class="sobre__retrato">
       <!-- Troque o arquivo mantendo o nome retrato.jpg e nada mais precisa mudar -->
-      <img class="sobre__foto" src="assets/img/retrato.jpg"
-           alt="Retrato de Isabela" data-i18n-attr="alt:sobre.retrato" width="1206" height="1744"
+      <img class="sobre__foto" src="/assets/img/retrato.jpg"
+           alt="Portrait of Isabela" width="1206" height="1744"
            loading="lazy" decoding="async">
     </div>
 
@@ -259,34 +256,28 @@
       <!-- Os tres paragrafos sao uma unidade de leitura so: as letras sao
            numeradas em sequencia continua, entao o texto acende do titulo ate
            o fim do apoio como uma frase unica, igual ao manifesto. -->
-      <div class="sobre__prosa leitura" data-i18n-html="sobre.prosa">
-        <p class="sobre__resumo">Sou a Isabela, designer independente brasileira.</p>
-
-        <p class="sobre__paragrafo">Ajudo marcas e pessoas a construírem presenças digitais intencionais, alinhando sensibilidade estética, clareza e autonomia técnica.</p>
-
-        <p class="sobre__paragrafo sobre__paragrafo--apoio">Trabalho de ponta a ponta, do primeiro rascunho ao código no ar. Meu trabalho é movido por curiosidade e vontade constante de simplificar processos, tanto para quem visita o site quanto para quem está construindo o projeto comigo.</p>
-      </div>
+      <div class="sobre__prosa leitura"><p class="sobre__resumo">I’m Isabela, an independent Brazilian designer.</p><p class="sobre__paragrafo">I help brands and people build intentional digital presences, aligning aesthetic sensibility, clarity and technical autonomy.</p><p class="sobre__paragrafo sobre__paragrafo--apoio">I work end to end, from the first sketch to the code going live. What moves me is curiosity and a constant urge to simplify processes, both for the person visiting the site and for the person building the project with me.</p></div>
 
       <div class="sobre__bloco">
-        <h3 class="sobre__rotulo" data-i18n="label.ferramentas">ferramentas</h3>
+        <h3 class="sobre__rotulo">tools</h3>
         <ul class="sobre__lista sobre__lista--pontos">
           <li>Figma</li>
           <li>Webflow</li>
-          <li data-i18n="sobre.js">HTML, CSS e JavaScript</li>
+          <li>HTML, CSS and JavaScript</li>
           <li>Claude Code</li>
         </ul>
       </div>
 
       <div class="sobre__bloco">
-        <h3 class="sobre__rotulo" data-i18n="label.contato">contato</h3>
+        <h3 class="sobre__rotulo">contact</h3>
         <ul class="sobre__lista">
           <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
-          <li><a data-i18n-attr="href:wa" href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+          <li><a href="https://wa.me/5543936182694?text=Hi%2C%20Isabela%21%20I%20came%20from%20your%20site%20and%20I%20am%20interested%20in%20building%20a%20project%20with%20you." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
         </ul>
       </div>
 
       <div class="sobre__bloco">
-        <h3 class="sobre__rotulo" data-i18n="label.redes">redes</h3>
+        <h3 class="sobre__rotulo">social</h3>
         <ul class="sobre__lista">
           <li><a href="https://www.linkedin.com/in/isabela-fernandes-40247a234/" target="_blank" rel="noopener noreferrer">linkedin</a></li>
           <li><a href="https://www.behance.net/isabelaalves52" target="_blank" rel="noopener noreferrer">behance</a></li>
@@ -295,61 +286,61 @@
 
       <a class="cta" href="#contato">
         <span class="cta__estrela" aria-hidden="true"></span>
-        <span data-i18n="sobre.cta">vamos conversar sobre o seu site</span>
+        <span>let’s talk about your site</span>
       </a>
     </div>
   </section>
 
   <!-- SECAO 4 — Servicos -->
   <div class="rule shell" id="servicos">
-    <span class="rule__label" data-i18n="nav.servicos">serviços</span>
-    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+    <span class="rule__label">services</span>
+    <img class="rule__line" src="/assets/svg/line-1.svg" alt="" width="1331" height="1">
   </div>
 
-  <section class="servicos shell" aria-label="Serviços" data-i18n-attr="aria-label:aria.servicos">
+  <section class="servicos shell" aria-label="Services">
     <article class="servico">
-      <h2 class="servico__titulo" data-i18n="serv.1.titulo">Website Design</h2>
-      <p class="servico__desc" data-i18n="serv.1.desc">Interfaces intencionais e focadas no usuário. Organização de conteúdo, navegação intuitiva e identidade visual aplicadas para criar uma presença memorável.</p>
+      <h2 class="servico__titulo">Website Design</h2>
+      <p class="servico__desc">Intentional, user-focused interfaces. Content structure, intuitive navigation and visual identity applied to build a memorable presence.</p>
     </article>
 
     <article class="servico">
-      <h2 class="servico__titulo" data-i18n="serv.2.titulo">Desenvolvimento</h2>
-      <p class="servico__desc" data-i18n="serv.2.desc">Transformação da interface em um site de alta performance. Implementação sob medida, código fluido, otimizado para SEO e pronto para conversão.</p>
+      <h2 class="servico__titulo">Development</h2>
+      <p class="servico__desc">Turning the interface into a high-performance site. Tailor-made implementation, fluid code, optimized for SEO and ready to convert.</p>
     </article>
 
     <article class="servico">
-      <h2 class="servico__titulo" data-i18n="serv.3.titulo">Suporte contínuo</h2>
-      <p class="servico__desc" data-i18n="serv.3.desc">Acompanhamento pós-lançamento para manter o site atualizado. Ajustes, novas demandas e manutenção com atendimento direto de quem construiu o projeto.</p>
+      <h2 class="servico__titulo">Ongoing support</h2>
+      <p class="servico__desc">Post-launch follow-up to keep the site current. Adjustments, new requests and maintenance handled directly by the person who built it.</p>
     </article>
   </section>
 
   <!-- SECAO 5 — Processo -->
   <div class="rule shell" id="processo">
-    <span class="rule__label" data-i18n="nav.processo">processo</span>
-    <img class="rule__line" src="assets/svg/line-1.svg" alt="" width="1331" height="1">
+    <span class="rule__label">process</span>
+    <img class="rule__line" src="/assets/svg/line-1.svg" alt="" width="1331" height="1">
   </div>
 
-  <section class="processo shell" aria-label="Processo" data-i18n-attr="aria-label:aria.processo">
+  <section class="processo shell" aria-label="Process">
     <ol class="processo__lista">
       <li class="etapa">
         <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="72" cy="100" r="62"/><circle cx="128" cy="100" r="62"/><circle cx="100" cy="100" r="80"/></svg></span>
-        <h3 class="etapa__titulo" data-i18n="proc.1.titulo">Contato e conversa</h3>
-        <p class="etapa__desc" data-i18n="proc.1.desc">Primeira troca para alinhar expectativas, entender o momento da sua marca e definir o projeto.</p>
+        <h3 class="etapa__titulo">Contact and conversation</h3>
+        <p class="etapa__desc">A first exchange to align expectations, understand where your brand stands and define the project.</p>
       </li>
       <li class="etapa">
         <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="100" cy="60" r="40"/><circle cx="120" cy="65.36" r="40"/><circle cx="134.64" cy="80" r="40"/><circle cx="140" cy="100" r="40"/><circle cx="134.64" cy="120" r="40"/><circle cx="120" cy="134.64" r="40"/><circle cx="100" cy="140" r="40"/><circle cx="80" cy="134.64" r="40"/><circle cx="65.36" cy="120" r="40"/><circle cx="60" cy="100" r="40"/><circle cx="65.36" cy="80" r="40"/><circle cx="80" cy="65.36" r="40"/><circle cx="100" cy="100" r="80"/></svg></span>
-        <h3 class="etapa__titulo" data-i18n="proc.2.titulo">Pesquisa</h3>
-        <p class="etapa__desc" data-i18n="proc.2.desc">Análise de universo visual, público e referências para construir uma base estratégica sólida.</p>
+        <h3 class="etapa__titulo">Research</h3>
+        <p class="etapa__desc">A look at visual world, audience and references to build a solid strategic base.</p>
       </li>
       <li class="etapa">
         <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><g opacity=".28"><circle cx="100" cy="100" r="80"/><circle cx="100" cy="100" r="30.56"/><line x1="100" y1="100" x2="100" y2="20"/><line x1="100" y1="100" x2="140" y2="30.72"/><line x1="100" y1="100" x2="169.28" y2="60"/><line x1="100" y1="100" x2="180" y2="100"/><line x1="100" y1="100" x2="169.28" y2="140"/><line x1="100" y1="100" x2="140" y2="169.28"/><line x1="100" y1="100" x2="100" y2="180"/><line x1="100" y1="100" x2="60" y2="169.28"/><line x1="100" y1="100" x2="30.72" y2="140"/><line x1="100" y1="100" x2="20" y2="100"/><line x1="100" y1="100" x2="30.72" y2="60"/><line x1="100" y1="100" x2="60" y2="30.72"/></g><path d="M100 20L107.91 70.48L140 30.72L121.61 78.39L169.28 60L129.52 92.09L180 100L129.52 107.91L169.28 140L121.61 121.61L140 169.28L107.91 129.52L100 180L92.09 129.52L60 169.28L78.39 121.61L30.72 140L70.48 107.91L20 100L70.48 92.09L30.72 60L78.39 78.39L60 30.72L92.09 70.48Z"/></svg></span>
-        <h3 class="etapa__titulo" data-i18n="proc.3.titulo">Design e desenvolvimento</h3>
-        <p class="etapa__desc" data-i18n="proc.3.desc">Construção completa da experiência. Do protótipo à implementação técnica de ponta a ponta.</p>
+        <h3 class="etapa__titulo">Design and development</h3>
+        <p class="etapa__desc">The full build of the experience. From prototype to end-to-end technical implementation.</p>
       </li>
       <li class="etapa">
         <span class="etapa__figura"><svg class="etapa__desenho" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><path d="M100 20L107.91 70.48L140 30.72L121.61 78.39L169.28 60L129.52 92.09L180 100L129.52 107.91L169.28 140L121.61 121.61L140 169.28L107.91 129.52L100 180L92.09 129.52L60 169.28L78.39 121.61L30.72 140L70.48 107.91L20 100L70.48 92.09L30.72 60L78.39 78.39L60 30.72L92.09 70.48Z" fill="currentColor" stroke="none" class="etapa__estrela"/></svg></span>
-        <h3 class="etapa__titulo" data-i18n="proc.4.titulo">Produto final</h3>
-        <p class="etapa__desc" data-i18n="proc.4.desc">Lançamento oficial da sua presença digital, com autonomia total e suporte para o pós-ar.</p>
+        <h3 class="etapa__titulo">Final product</h3>
+        <p class="etapa__desc">The official launch of your digital presence, with full autonomy and support for life after going live.</p>
       </li>
     </ol>
   </section>
@@ -364,7 +355,7 @@
     <div class="rodape__topo">
       <div class="rodape__chamada-bloco">
         <span class="rodape__estrela" aria-hidden="true"></span>
-        <p class="rodape__chamada" data-i18n-html="rodape.chamada">Sua marca merece ser vista.<br>Vamos conversar?</p>
+        <p class="rodape__chamada">Your brand deserves to be seen.<br>Shall we talk?</p>
       </div>
 
     </div>
@@ -372,17 +363,17 @@
     <ul class="rodape__contatos">
       <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
       <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
-      <li><a data-i18n-attr="href:wa" href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+      <li><a href="https://wa.me/5543936182694?text=Hi%2C%20Isabela%21%20I%20came%20from%20your%20site%20and%20I%20am%20interested%20in%20building%20a%20project%20with%20you." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
     </ul>
 
     <!-- Seletor de idioma. Fica no pe da pagina de proposito: a troca e
          automatica pelo idioma do navegador, entao isto aqui e so a saida para
          quem quer o outro lado. O estado atual e um atributo unico, que o CSS
          le e o gerador do /en inverte. -->
-    <div class="rodape__idioma" data-idioma-atual="pt">
-      <span class="rodape__idioma-rotulo" data-i18n="label.idioma">idioma</span>
-      <a class="rodape__idioma-op" href="/" lang="pt-BR" hreflang="pt-BR" data-idioma="pt" aria-current="true">português</a>
-      <a class="rodape__idioma-op" href="/en/" lang="en" hreflang="en" data-idioma="en">english</a>
+    <div class="rodape__idioma" data-idioma-atual="en">
+      <span class="rodape__idioma-rotulo">language</span>
+      <a class="rodape__idioma-op" href="/" lang="pt-BR" hreflang="pt-BR" data-idioma="pt">português</a>
+      <a class="rodape__idioma-op" href="/en/" lang="en" hreflang="en" data-idioma="en" aria-current="true">english</a>
     </div>
   </div>
 </footer>
@@ -390,8 +381,8 @@
 <!-- Desfoque progressivo na borda de baixo (ProgressiveBlur) -->
 <div class="blur-borda blur-borda--base" aria-hidden="true"></div>
 
-<script src="js/shader-fundo.js" defer></script>
-<script src="js/idioma.js"></script>
-<script src="js/main.js"></script>
+<script src="/js/shader-fundo.js" defer></script>
+<script src="/js/idioma.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>
