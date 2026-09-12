@@ -15,7 +15,6 @@
 
   /* tipografia */
   --font-sans:    "Zalando Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Geist", var(--font-sans);
 
   /* O frame de 1440 do Figma vira so referencia de proporcao. O conteudo
      nao tem mais teto de largura: ocupa a tela inteira, com a margem
@@ -1731,4 +1730,102 @@ a{ color: inherit; text-decoration: none; }
   .linha__seta,
   .linha__breve{ grid-column: 3; grid-row: 1; }
   .linha__previa{ display: none; }
+}
+
+
+/* =========================================================
+   PAGINA 404
+   Mesma gramatica das superficies escuras: o gradiente por baixo,
+   a estrela abrindo o bloco e a pilula fechando.
+   ========================================================= */
+
+.pagina-erro{ background: var(--dark); }
+
+.erro{
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: clip;
+  background: var(--dark);
+  color: var(--white);
+}
+
+/* canvas com a medida da viewport, como as outras: o shader normaliza o campo
+   por min(largura, altura), e um canvas menor mostraria outra escala */
+.erro__shader{
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  display: block;
+  width: 100%;
+  height: 100svh;
+}
+
+.erro__shader + .erro__conteudo{ position: relative; }
+
+.erro::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(20,20,20,.82) 0%,
+    rgba(20,20,20,.62) 45%,
+    rgba(20,20,20,.86) 100%);
+}
+
+.erro__conteudo{
+  max-width: 46ch;
+  padding-block: clamp(48px, 10vh, 96px);
+}
+
+.erro__estrela{
+  display: block;
+  width: 55px;
+  height: 55px;
+  margin-bottom: clamp(20px, 3vh, 32px);
+  background-color: currentColor;
+  -webkit-mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  mask: url(../assets/svg/star-4.svg) center / contain no-repeat;
+  animation: star-spin 22s linear infinite;
+}
+
+.erro__codigo{
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.6);
+}
+
+.erro__titulo{
+  margin: 0 0 clamp(12px, 1.8vh, 20px);
+  font-size: clamp(32px, 5.2vw, 68px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -.045em;
+}
+
+.erro__texto{
+  margin: 0;
+  max-width: 34ch;
+  font-size: clamp(15px, 1.3vw, 19px);
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(255,255,255,.75);
+}
+
+/* a pilula do site, invertida para viver sobre o escuro */
+.cta--claro{
+  border-color: rgba(255,255,255,.35);
+  color: var(--white);
+}
+
+.cta--claro:hover{
+  background-color: var(--white);
+  border-color: var(--white);
+  color: var(--dark);
 }

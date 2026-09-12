@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>página não encontrada · delarge</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#222222">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="pagina-erro">
+
+<!-- Mesmo material das outras superficies escuras do site: o gradiente num
+     canvas de 100svh, recortado pela pagina. Sem WebGL o canvas se remove
+     sozinho e sobra a cor solida, igual ao resto. -->
+<div class="erro">
+  <canvas class="erro__shader" data-shader aria-hidden="true"></canvas>
+
+  <div class="erro__conteudo shell">
+    <span class="erro__estrela" aria-hidden="true"></span>
+    <p class="erro__codigo">404</p>
+    <h1 class="erro__titulo">Essa página não existe.</h1>
+    <p class="erro__texto">Pode ser um link antigo, ou eu mudei alguma coisa de lugar.</p>
+
+    <a class="cta cta--claro" href="/">
+      <span class="cta__estrela" aria-hidden="true"></span>
+      <span>voltar para o início</span>
+    </a>
+  </div>
+</div>
+
+<script src="/js/shader-fundo.js" defer></script>
+</body>
+</html>

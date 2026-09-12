@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://delargedesign.com.br/sitemap.xml
