@@ -64,6 +64,13 @@ chegar em quem ja visitou o site. Com `no-cache` ele sempre pergunta, e o
 ETag responde 304 sem corpo quando nada mudou, entao o custo e um pedido
 minusculo por arquivo.
 
+O `?v=` no fim dos enderecos de `css/` e `js/` e uma saida de emergencia. Um
+navegador guarda o arquivo JUNTO com a ordem de cache que veio com ele: se essa
+ordem dizia um dia, trocar o cabecalho depois nao alcanca quem ja baixou, porque
+ele nem volta a perguntar. Trocar o endereco alcanca, porque o arquivo novo nao
+esta no cache dele. Com `no-cache` no lugar isso nao deve mais acontecer; se
+acontecer, basta subir o numero.
+
 `assets/` vai com uma hora. As imagens sao trocadas mantendo o nome, e o
 proprio `index.html` diz isso no comentario do retrato. Com cache longo, quem
 ja visitou ficaria com a foto velha por tempo demais.
