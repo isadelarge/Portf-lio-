@@ -53,6 +53,21 @@ causa da origem `file://`.
 npx http-server . -p 4323 -c-1
 ```
 
+## Cache
+
+O `vercel.json` trata dois casos diferentes.
+
+`css/` e `js/` vao com `no-cache`. Sao nomes fixos com conteudo que muda: o
+`main.js` de hoje mora no mesmo endereco do de ontem. Com um `max-age` o
+navegador nem pergunta ao servidor, e uma correcao demora ate esse prazo para
+chegar em quem ja visitou o site. Com `no-cache` ele sempre pergunta, e o
+ETag responde 304 sem corpo quando nada mudou, entao o custo e um pedido
+minusculo por arquivo.
+
+`assets/` vai com uma hora. As imagens sao trocadas mantendo o nome, e o
+proprio `index.html` diz isso no comentario do retrato. Com cache longo, quem
+ja visitou ficaria com a foto velha por tempo demais.
+
 ## Notas
 
 O gradiente da intro, da faixa da navbar, do painel lateral e do rodapé é o mesmo
