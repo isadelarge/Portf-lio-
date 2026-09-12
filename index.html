@@ -369,21 +369,27 @@
 
     </div>
 
-    <ul class="rodape__contatos">
-      <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
-      <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
-      <li><a data-i18n-attr="href:wa" href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
-    </ul>
+    <!-- Os contatos e o seletor dividem a ultima linha do rodape: um em cada
+         ponta, na mesma linha de base. -->
+    <!-- Os contatos e o seletor dividem a ultima linha do rodape, um em cada
+         ponta. O seletor fica aqui, e nao na barra, porque a troca de idioma e
+         automatica pelo idioma do navegador: isto e a saida para quem quer o
+         outro lado, e nao a porta de entrada. O idioma atual e um atributo so,
+         que o CSS le e o gerador do /en inverte. -->
+    <div class="rodape__base">
+      <ul class="rodape__contatos">
+        <li><a href="mailto:isadelargedesign@gmail.com">isadelargedesign@gmail.com</a></li>
+        <li><a href="https://www.instagram.com/delarge.studio/" target="_blank" rel="noopener noreferrer">instagram</a></li>
+        <li><a data-i18n-attr="href:wa" href="https://wa.me/5543936182694?text=Ol%C3%A1%2C%20Isabela%21%20Vim%20pelo%20site%20e%20tenho%20interesse%20em%20construir%20um%20projeto%20com%20voc%C3%AA." target="_blank" rel="noopener noreferrer">whatsapp</a></li>
+      </ul>
 
-    <!-- Seletor de idioma. Fica no pe da pagina de proposito: a troca e
-         automatica pelo idioma do navegador, entao isto aqui e so a saida para
-         quem quer o outro lado. O estado atual e um atributo unico, que o CSS
-         le e o gerador do /en inverte. -->
-    <div class="rodape__idioma" data-idioma-atual="pt">
-      <span class="rodape__idioma-rotulo" data-i18n="label.idioma">idioma</span>
-      <a class="rodape__idioma-op" href="/" lang="pt-BR" hreflang="pt-BR" data-idioma="pt" aria-current="true">português</a>
-      <a class="rodape__idioma-op" href="/en/" lang="en" hreflang="en" data-idioma="en">english</a>
+      <div class="rodape__idioma" data-idioma-atual="pt">
+        <span class="rodape__idioma-rotulo" data-i18n="label.idioma">idioma</span>
+        <a class="rodape__idioma-op" href="/" lang="pt-BR" hreflang="pt-BR" data-idioma="pt" aria-current="true">português</a>
+        <a class="rodape__idioma-op" href="/en/" lang="en" hreflang="en" data-idioma="en">english</a>
+      </div>
     </div>
+
   </div>
 </footer>
 
