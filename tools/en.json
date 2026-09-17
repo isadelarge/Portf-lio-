@@ -60,5 +60,8 @@
   "erro.titulo": "This page doesn’t exist.",
   "erro.texto": "It might be an old link, or I moved something.",
   "erro.cta": "back to the start",
-  "og.alt": "The delarge star over the site gradient"
+  "og.alt": "The delarge star over the site gradient",
+  "proj.avora.tipo": "clinical dermatology · site and booking",
+  "proj.avora.desc": "A clinic that examines before it promises. I organized the navigation around what brings you in, not around the name of the machine.",
+  "proj.avora.alt": "Cover of the Ávora project"
 }
